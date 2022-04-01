@@ -1,18 +1,19 @@
 import { GUID } from "../guid.ts";
 import { unwrap } from "../util.ts";
-import { getFunction, vtable } from "../com.ts";
 import { HSTRING } from "../winstring.ts";
 import { IUnknown } from "./IUnknown.ts";
 
 export class IInspectable extends IUnknown {
   static GUID = GUID.fromBigInt(0xaf86e2e0_b12d_4c6a_9c5a_d7aa65101e90n);
 
-  @vtable(3, {
-    parameters: ["pointer", "pointer", "pointer"],
-    result: "isize",
-  })
   GetIids(): GUID[] {
-    const fn = getFunction(arguments);
+    const fn = this._getFunction(
+      3,
+      {
+        parameters: ["pointer", "pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
     const iids = [];
     const outLen = new BigUint64Array(1);
     const outPtr = new BigUint64Array(1);
@@ -27,32 +28,34 @@ export class IInspectable extends IUnknown {
     return iids;
   }
 
-  @vtable(4, {
-    parameters: ["pointer", "pointer"],
-    result: "isize",
-  })
   GetRuntimeClassName(): string {
-    const fn = getFunction(arguments);
+    const fn = this._getFunction(
+      4,
+      {
+        parameters: ["pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
     const out = new BigUint64Array(1);
     unwrap(fn(this._ptr, out));
     const ptr = new Deno.UnsafePointer(out[0]);
     return new HSTRING(ptr).getString();
   }
 
-  @vtable(5, {
-    parameters: ["pointer", "pointer"],
-    result: "isize",
-  })
   GetTrustLevel(): number {
-    const fn = getFunction(arguments);
+    const fn = this._getFunction(
+      5,
+      {
+        parameters: ["pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
     const out = new Uint32Array(1);
     unwrap(fn(this._ptr, out));
     return out[0];
   }
 
-  [Symbol.for("Deno.customInspect")]() {
-    return `COMObject<${this.GetRuntimeClassName()}>(0x${
-      this._ptr.value.toString(16).padStart(8, "0")
-    })`;
+  [Symbol.for("COMObject.name")]() {
+    return this.GetRuntimeClassName();
   }
 }

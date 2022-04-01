@@ -12,4 +12,8 @@ export class IFileOpenDialog extends IFileDialog {
   static createInstance() {
     return createInstance(CLSID_FileOpenDialog, this);
   }
+
+  [Symbol.for("COMObject.name")]() {
+    return "IFileOpenDialog";
+  }
 }
