@@ -1,6 +1,6 @@
 import type { IUnknown } from "./com/IUnknown.ts";
 import { GUID, GUIDConvertible } from "./guid.ts";
-import { unwrap } from "./util.ts";
+import { encodeUTF16, unwrap } from "./util.ts";
 
 export const ole32 = Deno.dlopen(
   "Ole32.dll",
@@ -12,6 +12,16 @@ export const ole32 = Deno.dlopen(
 
     CoCreateInstance: {
       parameters: ["pointer", "pointer", "u32", "pointer", "pointer"],
+      result: "isize",
+    },
+
+    CLSIDFromString: {
+      parameters: ["pointer", "pointer"],
+      result: "isize",
+    },
+
+    IIDFromString: {
+      parameters: ["pointer", "pointer"],
       result: "isize",
     },
   } as const,
@@ -89,19 +99,25 @@ export class COMObject {
   }
 }
 
+export function clsidFromString(
+  clsid: string,
+): Uint8Array {
+  const ptr = new Uint8Array(16);
+  const hr = ole32.CLSIDFromString(
+    encodeUTF16(clsid + "\0")[0],
+    ptr,
+  );
+  if (hr !== 0) {
+    throw new Error(`CLSIDFromString failed with 0x${hr.toString(16)}`);
+  }
+  return ptr;
+}
+
 export function createInstance<I extends typeof IUnknown>(
   clsid: GUIDConvertible,
   iid: I,
 ): InstanceType<I> {
   const out = new BigUint64Array(1);
-  console.log(
-    "CoCreateInstance",
-    new GUID(clsid).data,
-    null,
-    0x01 | 0x02 | 0x04 | 0x10,
-    iid.GUID.data,
-    out,
-  );
   unwrap(ole32.CoCreateInstance(
     new GUID(clsid).data,
     null,

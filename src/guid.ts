@@ -1,4 +1,6 @@
-export type GUIDConvertible = GUID | Uint8Array | bigint;
+import { clsidFromString } from "./com.ts";
+
+export type GUIDConvertible = GUID | Uint8Array | bigint | string;
 
 export class GUID {
   data: Uint8Array;
@@ -10,18 +12,24 @@ export class GUID {
       this.data = value;
     } else if (typeof value === "bigint") {
       this.data = GUID.fromBigInt(value).data;
+    } else if (typeof value === "string") {
+      this.data = GUID.fromString(value).data;
     } else {
       throw new Error("Invalid value");
     }
   }
 
+  static fromString(value: string) {
+    return new GUID(clsidFromString(value));
+  }
+
   static fromBigInt(value: bigint) {
-    const data = new Uint8Array(16);
-    const str = value.toString(data.length).padStart(data.length * 2, "0");
-    for (let i = 0; i < data.length * 2; i += 2) {
-      data[i / 2] = parseInt(str[i] + str[i + 1], 16);
-    }
-    return new GUID(data);
+    const data = value.toString(16).padStart(32, "0");
+    const inner = `${data.slice(0, 8)}-${data.slice(8, 12)}-${
+      data.slice(12, 16)
+    }-${data.slice(16, 20)}-${data.slice(20, 32)}`;
+    const str = "{" + inner + "}";
+    return this.fromString(str);
   }
 
   toString() {
