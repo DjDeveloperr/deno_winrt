@@ -1,6 +1,8 @@
 import { Parameter } from "./parameter.ts";
 import { Scope } from "./scope.ts";
 import { TypeDef } from "./typedef.ts";
+import { ELEMENT_TYPE_MAP, TypeId } from "./typeid.ts";
+import { TypeTuple } from "./typetuple.ts";
 
 export class Method {
   #initialized = false;
@@ -11,6 +13,7 @@ export class Method {
   #rva = 0;
   #implFlags = 0;
   #parameters: Parameter[] = [];
+  #returnType?: Parameter;
 
   constructor(public scope: Scope, public token: number) {}
 
@@ -50,9 +53,10 @@ export class Method {
         this.#rva = pulCodeRVA[0];
         this.#implFlags = pdvImplFlags[0];
 
-        this.#initializeParameters();
-
         this.#initialized = true;
+
+        this.#initializeParameters();
+        this.#parseSigs();
       }
     }
   }
@@ -72,6 +76,85 @@ export class Method {
     }
 
     this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+  }
+
+  #parseSigs() {
+    if (this.isGetter && this.#sigs[0] !== 0x20) {
+      this.#parsePropertySig();
+    } else {
+      this.#parseMethodSig();
+    }
+  }
+
+  #parsePropertySig() {
+    if (this.isGetter) {
+    } else if (this.isSetter) {}
+    throw new Error("unimplemented");
+  }
+
+  #parseMethodSig() {
+    let paramIndex = 0;
+    let blobPtr = this.hasGenericParams ? 3 : 2;
+
+    if (this.parameters.length !== 0 && this.parameters[0].sequence === 0) {
+      this.#returnType = this.#parameters.shift()!;
+      const returnTypeTup = new TypeTuple(
+        this.scope,
+        this.sigs.subarray(blobPtr),
+      );
+      blobPtr += returnTypeTup.offsetLength;
+      this.#returnType.initFromType(returnTypeTup.type);
+    } else {
+      const returnTypeTup = new TypeTuple(
+        this.scope,
+        this.sigs.subarray(blobPtr),
+      );
+      blobPtr += returnTypeTup.offsetLength;
+      this.#returnType = new Parameter(this.scope, 0).initFromType(
+        returnTypeTup.type,
+      );
+    }
+
+    while (paramIndex < this.#parameters.length) {
+      const runtimeType = new TypeTuple(
+        this.scope,
+        this.sigs.subarray(blobPtr),
+      );
+      blobPtr += runtimeType.offsetLength;
+
+      if (runtimeType.type.base === "array") {
+        blobPtr += this.#parseArray(paramIndex, this.sigs.subarray(blobPtr));
+        paramIndex++;
+      } else {
+        // Force init
+        this.#parameters[paramIndex].name;
+        // then update type
+        this.#parameters[paramIndex].initFromType(runtimeType.type);
+      }
+      paramIndex++;
+    }
+  }
+
+  #parseArray(index: number, sig: Uint8Array) {
+    const typeTup = new TypeTuple(this.scope, sig.subarray(2));
+    const tid = new TypeId();
+    tid.base = "ptr";
+    const typeArg = new TypeId();
+    typeArg.base = "u32";
+    tid.typeArg = typeArg;
+    this.#parameters[index].initFromType(tid);
+    this.#parameters[index].name = "__valueSize";
+
+    const typePtr = new TypeId();
+    typePtr.base = "ptr";
+    typePtr.typeArg = typeTup.type;
+    this.#parameters.splice(
+      index + 1,
+      0,
+      new Parameter(this.scope, 0).initFromType(typePtr),
+    );
+    this.#parameters[index + 1].name = "__value";
+    return 0;
   }
 
   get name() {
@@ -107,6 +190,11 @@ export class Method {
   get parameters() {
     this.#initialize();
     return this.#parameters;
+  }
+
+  get returnType() {
+    this.#initialize();
+    return this.#returnType;
   }
 
   get memberAccess() {

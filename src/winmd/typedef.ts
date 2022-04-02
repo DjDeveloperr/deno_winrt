@@ -84,33 +84,66 @@ export class TypeDef {
 
   #initialize() {
     if (!this.#initialized) {
-      let hr;
+      switch (this.token & 0xFF000000) {
+        case 0x01000000: {
+          // typeref
+          let hr;
 
-      const outName = new Uint16Array(256);
-      const chTypeDef = new Uint32Array(1);
-      const outFlags = new Uint32Array(1);
-      const outExtends = new Uint32Array(1);
+          const ptkResolutionScope = new Uint32Array(1);
+          const outName = new Uint16Array(256);
+          const pchName = new Uint32Array(1);
 
-      hr = this.scope.com.GetTypeDefProps(
-        this.token,
-        outName,
-        outName.length,
-        chTypeDef,
-        outFlags,
-        outExtends,
-      );
+          hr = this.scope.com.GetTypeRefProps(
+            this.token,
+            ptkResolutionScope,
+            outName,
+            outName.length,
+            pchName,
+          );
 
-      if (hr !== 0) {
-        throw new Error(`GetTypeDefProps failed with 0x${hr.toString(16)}`);
+          if (hr === 0) {
+            this.#name = String.fromCharCode(
+              ...outName.subarray(0, pchName[0]),
+            );
+          }
+          break;
+        }
+
+        case 0x02000000: {
+          // typedef
+          let hr;
+
+          const outName = new Uint16Array(256);
+          const chTypeDef = new Uint32Array(1);
+          const outFlags = new Uint32Array(1);
+          const outExtends = new Uint32Array(1);
+
+          hr = this.scope.com.GetTypeDefProps(
+            this.token,
+            outName,
+            outName.length,
+            chTypeDef,
+            outFlags,
+            outExtends,
+          );
+
+          if (hr === 0) {
+            this.#name = String.fromCharCode(
+              ...outName.subarray(0, chTypeDef[0] - 1),
+            );
+            this.#flags = outFlags[0];
+            if (outExtends[0] !== 0) {
+              this.#parent = new TypeDef(this.scope, outExtends[0]);
+            }
+          }
+          break;
+        }
+
+        case 0x1b000000: {
+          throw new Error("typespec unimplemented");
+        }
       }
 
-      this.#name = String.fromCharCode(
-        ...outName.subarray(0, chTypeDef[0] - 1),
-      );
-      this.#flags = outFlags[0];
-      if (outExtends[0] !== 0) {
-        this.#parent = new TypeDef(this.scope, outExtends[0]);
-      }
       this.#initialized = true;
     }
   }
@@ -219,6 +252,60 @@ export class TypeDef {
     }
 
     return this.#methods;
+  }
+
+  static processInterfaceToken(scope: Scope, token: number) {
+    const ptkClass = new Uint32Array(1);
+    const ptkIface = new Uint32Array(1);
+
+    const hr = scope.com.GetInterfaceImplProps(
+      token,
+      ptkClass,
+      ptkIface,
+    );
+
+    if (hr === 0) {
+      return new TypeDef(scope, ptkIface[0]);
+    } else {
+      throw new Error("unable to get interface token");
+    }
+  }
+
+  #interfaces: TypeDef[] = [];
+  #interfacesInit = false;
+
+  get interfaces() {
+    if (!this.#interfacesInit) {
+      const phEnum = new BigUint64Array(1);
+      const rImpls = new Uint32Array(1);
+      const pcImpls = new Uint32Array(1);
+
+      let hr = this.scope.com.EnumInterfaceImpls(
+        phEnum,
+        this.token,
+        rImpls,
+        1,
+        pcImpls,
+      );
+
+      while (hr === 0) {
+        this.#interfaces.push(
+          TypeDef.processInterfaceToken(this.scope, rImpls[0]),
+        );
+        hr = this.scope.com.EnumInterfaceImpls(
+          phEnum,
+          this.token,
+          rImpls,
+          1,
+          pcImpls,
+        );
+      }
+
+      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+
+      this.#interfacesInit = true;
+    }
+    return this.#interfaces;
   }
 
   [Symbol.for("Deno.customInspect")]() {

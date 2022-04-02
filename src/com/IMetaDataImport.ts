@@ -56,13 +56,37 @@ export class IMetaDataImport extends IUnknown {
     return fn(this._ptr, phEnum, rgTypeDefs, cMax, pcTypeDefs);
   }
 
+  EnumInterfaceImpls(
+    phEnum: BigUint64Array,
+    td: number,
+    rImpls: Uint32Array,
+    cMax: number,
+    pcImpls: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      7,
+      {
+        parameters: [
+          "pointer",
+          "pointer",
+          "u32",
+          "pointer",
+          "isize",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, phEnum, td, rImpls, cMax, pcImpls);
+  }
+
   FindTypeDefByName(
     szTypeDef: string,
     tkEnclosingClass: number,
     mdTypeDef: Uint32Array,
   ): number {
     const fn = this._getFunction(
-      13,
+      9,
       {
         parameters: ["pointer", "pointer", "u32", "pointer"],
         result: "isize",
@@ -73,6 +97,52 @@ export class IMetaDataImport extends IUnknown {
       encodeUTF16(szTypeDef + "\0")[0],
       tkEnclosingClass,
       mdTypeDef,
+    );
+  }
+
+  GetInterfaceImplProps(
+    tkInterfaceImpl: number,
+    ptkClass: Uint32Array,
+    ptkIface: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      13,
+      {
+        parameters: ["pointer", "u32", "pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, tkInterfaceImpl, ptkClass, ptkIface);
+  }
+
+  GetTypeRefProps(
+    tkTypeRef: number,
+    ptkResolutionScope: Uint32Array,
+    szName: Uint16Array,
+    cchName: number,
+    pchName: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      14,
+      {
+        parameters: [
+          "pointer",
+          "u32",
+          "pointer",
+          "pointer",
+          "usize",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      tkTypeRef,
+      ptkResolutionScope,
+      szName,
+      cchName,
+      pchName,
     );
   }
 
