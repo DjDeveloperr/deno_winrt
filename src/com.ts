@@ -27,13 +27,7 @@ export const ole32 = Deno.dlopen(
   } as const,
 ).symbols;
 
-Deno.dlopen("rpcrt4.dll", {});
-Deno.dlopen("shell32.dll", {});
-Deno.dlopen("shcore.dll", {});
-
 ole32.CoInitializeEx(null, 0x02 | 0x04);
-
-const nullptr = new Deno.UnsafePointer(0n);
 
 export class COMObject {
   _ptr: Deno.UnsafePointer;

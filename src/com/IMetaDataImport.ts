@@ -1,5 +1,5 @@
 import { GUID } from "../guid.ts";
-import { unwrap } from "../util.ts";
+import { encodeUTF16, unwrap } from "../util.ts";
 import { IUnknown } from "./IUnknown.ts";
 
 export class IMetaDataImport extends IUnknown {
@@ -54,6 +54,40 @@ export class IMetaDataImport extends IUnknown {
       } as const,
     );
     return fn(this._ptr, phEnum, rgTypeDefs, cMax, pcTypeDefs);
+  }
+
+  GetTypeDefProps(
+    td: number,
+    szTypeDef: Uint16Array,
+    cchTypeDef: number,
+    pchTypeDef: Uint32Array,
+    pdwTypeDefFlags: Uint32Array,
+    ptkExtends: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      12,
+      {
+        parameters: [
+          "pointer",
+          "u32",
+          "pointer",
+          "usize",
+          "pointer",
+          "pointer",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      td,
+      szTypeDef,
+      cchTypeDef,
+      pchTypeDef,
+      pdwTypeDefFlags,
+      ptkExtends,
+    );
   }
 
   [Symbol.for("COMObject.name")]() {
