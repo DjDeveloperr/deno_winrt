@@ -24,6 +24,11 @@ export const ole32 = Deno.dlopen(
       parameters: ["pointer", "pointer"],
       result: "isize",
     },
+
+    StringFromIID: {
+      parameters: ["pointer", "pointer"],
+      result: "isize",
+    },
   } as const,
 ).symbols;
 
@@ -72,6 +77,22 @@ export function clsidFromString(
     throw new Error(`CLSIDFromString failed with 0x${hr.toString(16)}`);
   }
   return ptr;
+}
+
+export function stringFromGUID(
+  guid: Uint8Array,
+): string {
+  const ptr = new BigUint64Array(1);
+  const hr = ole32.StringFromIID(
+    guid,
+    ptr,
+  );
+  if (hr !== 0) {
+    throw new Error(`StringFromIID failed with 0x${hr.toString(16)}`);
+  }
+  const str = new Uint16Array(38);
+  new Deno.UnsafePointerView(new Deno.UnsafePointer(ptr[0])).copyInto(str);
+  return new TextDecoder().decode(str);
 }
 
 export function createInstance<I extends typeof IUnknown>(

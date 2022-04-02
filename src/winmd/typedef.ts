@@ -1,9 +1,11 @@
+import { GUID } from "../guid.ts";
 import { Scope } from "./scope.ts";
 
 export class TypeDef {
   #initialized = false;
   #name = "";
   #flags = 0;
+  #parent?: TypeDef;
 
   constructor(public scope: Scope, public token: number) {}
 
@@ -15,6 +17,11 @@ export class TypeDef {
   get flags() {
     this.#initialize();
     return this.#flags;
+  }
+
+  get parent() {
+    this.#initialize();
+    return this.#parent;
   }
 
   get isClass() {
@@ -65,6 +72,14 @@ export class TypeDef {
     return (this.flags & 0x00200000) === 0x00200000;
   }
 
+  get isDelegate() {
+    return this.parent?.name === "System.MulticastDelegate";
+  }
+
+  get isEnum() {
+    return this.parent?.name === "System.Enum";
+  }
+
   #initialize() {
     if (!this.#initialized) {
       let hr;
@@ -91,13 +106,53 @@ export class TypeDef {
         ...outName.subarray(0, Number(chTypeDef[0])),
       );
       this.#flags = outFlags[0];
+      if (outExtends[0] !== 0) {
+        this.#parent = new TypeDef(this.scope, outExtends[0]);
+      }
       this.#initialized = true;
     }
+  }
+
+  getCustomGuidAttribute(name: string): GUID | undefined {
+    const ppData = new BigUint64Array(1);
+    const pcbData = new Uint32Array(1);
+
+    const hr = this.scope.com.GetCustomAttributeByName(
+      this.token,
+      name,
+      ppData,
+      pcbData,
+    );
+
+    if (hr === 0) {
+      if (pcbData[0] > 0) {
+        const blob = new Deno.UnsafePointer(ppData[0]);
+        const guid = new Uint8Array(16);
+        const view = new Deno.UnsafePointerView(blob);
+        view.copyInto(guid, 2);
+        return new GUID(guid);
+      }
+      const data = new Uint8Array(Number(pcbData[0]));
+      this.scope.com.GetCustomAttributeByName(
+        this.token,
+        name,
+        ppData,
+        pcbData,
+      );
+      data.set(new Uint8Array(ppData.buffer, 0, data.length));
+      return new GUID(data);
+    }
+  }
+
+  get guid() {
+    return (this.getCustomGuidAttribute(
+      "Windows.Foundation.Metadata.GuidAttribute",
+    ) ?? this.getCustomGuidAttribute("Windows.Win32.Interop.GuidAttribute"))!;
   }
 
   [Symbol.for("Deno.customInspect")]() {
     return `TypeDef${this.isClass ? "<Class>" : ""}${
       this.isInterface ? "<Interface>" : ""
-    }(${this.name})`;
+    }(${this.name}, ${this.guid.toString()})`;
   }
 }

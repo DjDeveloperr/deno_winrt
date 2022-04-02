@@ -1,4 +1,4 @@
-import { clsidFromString } from "./com.ts";
+import { clsidFromString, stringFromGUID } from "./com.ts";
 
 export type GUIDConvertible = GUID | Uint8Array | bigint | string;
 
@@ -33,14 +33,7 @@ export class GUID {
   }
 
   toString() {
-    const view = new DataView(this.data.buffer);
-    return `${view.getUint32(0, false).toString(16).padStart(8, "0")}-${
-      view.getUint16(4, false).toString(16).padStart(4, "0")
-    }-${view.getUint16(6, false).toString(16).padStart(4, "0")}-${
-      view.getUint16(8, false).toString(16).padStart(4, "0")
-    }-${view.getUint16(10, false).toString(16).padStart(4, "0")}${
-      view.getUint32(12, false).toString(16).padStart(8, "0")
-    }`;
+    return stringFromGUID(this.data);
   }
 
   [Symbol.for("Deno.customInspect")]() {

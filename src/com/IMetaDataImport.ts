@@ -90,6 +90,22 @@ export class IMetaDataImport extends IUnknown {
     );
   }
 
+  GetCustomAttributeByName(
+    tkObj: number,
+    szName: string,
+    ppData: BigUint64Array,
+    pcbData: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      60,
+      {
+        parameters: ["pointer", "u32", "pointer", "pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, tkObj, encodeUTF16(szName + "\0")[0], ppData, pcbData);
+  }
+
   [Symbol.for("COMObject.name")]() {
     return "IMetaDataImport";
   }
