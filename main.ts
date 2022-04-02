@@ -3,4 +3,8 @@ import { MetaDataDispenser } from "./mod.ts";
 const dispenser = new MetaDataDispenser();
 const scope = dispenser.openScope("Windows.Win32.winmd");
 
-console.log(scope.typeDefs.filter((e) => e.isInterface));
+const td = scope.typeDefs.find((e) =>
+  e.name === "Windows.Win32.UI.Shell.IFileDialog"
+)!;
+
+console.log(td.methods);

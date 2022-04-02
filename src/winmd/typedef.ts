@@ -1,4 +1,6 @@
 import { GUID } from "../guid.ts";
+import { Field } from "./field.ts";
+import { Method } from "./method.ts";
 import { Scope } from "./scope.ts";
 
 export class TypeDef {
@@ -103,7 +105,7 @@ export class TypeDef {
       }
 
       this.#name = String.fromCharCode(
-        ...outName.subarray(0, Number(chTypeDef[0])),
+        ...outName.subarray(0, chTypeDef[0] - 1),
       );
       this.#flags = outFlags[0];
       if (outExtends[0] !== 0) {
@@ -150,9 +152,78 @@ export class TypeDef {
     ) ?? this.getCustomGuidAttribute("Windows.Win32.Interop.GuidAttribute"))!;
   }
 
+  #fields: Field[] = [];
+
+  get fields() {
+    if (this.#fields.length === 0) {
+      let hr;
+
+      const phEnum = new BigUint64Array(1);
+      const rgFields = new Uint32Array(1);
+      const pcTokens = new Uint32Array(1);
+
+      hr = this.scope.com.EnumFields(
+        phEnum,
+        this.token,
+        rgFields,
+        1,
+        pcTokens,
+      );
+
+      while (hr === 0) {
+        this.#fields.push(new Field(this.scope, rgFields[0]));
+        hr = this.scope.com.EnumFields(
+          phEnum,
+          this.token,
+          rgFields,
+          1,
+          pcTokens,
+        );
+      }
+
+      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+    }
+    return this.#fields;
+  }
+
+  #methods: Method[] = [];
+
+  get methods() {
+    if (this.#methods.length === 0) {
+      let hr;
+
+      const phEnum = new BigUint64Array(1);
+      const rgMethods = new Uint32Array(1);
+      const pcTokens = new Uint32Array(1);
+
+      hr = this.scope.com.EnumMethods(
+        phEnum,
+        this.token,
+        rgMethods,
+        1,
+        pcTokens,
+      );
+
+      while (hr === 0) {
+        this.#methods.push(new Method(this.scope, rgMethods[0]));
+        hr = this.scope.com.EnumMethods(
+          phEnum,
+          this.token,
+          rgMethods,
+          1,
+          pcTokens,
+        );
+      }
+
+      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+    }
+
+    return this.#methods;
+  }
+
   [Symbol.for("Deno.customInspect")]() {
     return `TypeDef${this.isClass ? "<Class>" : ""}${
       this.isInterface ? "<Interface>" : ""
-    }(${this.name}, ${this.guid.toString()})`;
+    }(${this.name}, ${this.guid?.toString()})`;
   }
 }

@@ -56,6 +56,26 @@ export class IMetaDataImport extends IUnknown {
     return fn(this._ptr, phEnum, rgTypeDefs, cMax, pcTypeDefs);
   }
 
+  FindTypeDefByName(
+    szTypeDef: string,
+    tkEnclosingClass: number,
+    mdTypeDef: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      13,
+      {
+        parameters: ["pointer", "pointer", "u32", "pointer"],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      encodeUTF16(szTypeDef + "\0")[0],
+      tkEnclosingClass,
+      mdTypeDef,
+    );
+  }
+
   GetTypeDefProps(
     td: number,
     szTypeDef: Uint16Array,
@@ -87,6 +107,170 @@ export class IMetaDataImport extends IUnknown {
       pchTypeDef,
       pdwTypeDefFlags,
       ptkExtends,
+    );
+  }
+
+  EnumMethods(
+    phEnum: BigUint64Array,
+    tkTypeDef: number,
+    rgMethod: Uint32Array,
+    cMax: number,
+    pcTokens: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      18,
+      {
+        parameters: [
+          "pointer",
+          "pointer",
+          "u32",
+          "pointer",
+          "isize",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, phEnum, tkTypeDef, rgMethod, cMax, pcTokens);
+  }
+
+  EnumFields(
+    phEnum: BigUint64Array,
+    tkTypeDef: number,
+    rgFields: Uint32Array,
+    cMax: number,
+    pcTokens: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      20,
+      {
+        parameters: [
+          "pointer",
+          "pointer",
+          "u32",
+          "pointer",
+          "isize",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, phEnum, tkTypeDef, rgFields, cMax, pcTokens);
+  }
+
+  EnumParams(
+    phEnum: BigUint64Array,
+    tkMethodDef: number,
+    rParams: Uint32Array,
+    cMax: number,
+    pcTokens: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      22,
+      {
+        parameters: [
+          "pointer",
+          "pointer",
+          "u32",
+          "pointer",
+          "isize",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, phEnum, tkMethodDef, rParams, cMax, pcTokens);
+  }
+
+  GetMethodProps(
+    tkMethodDef: number,
+    ptkClass: Uint32Array,
+    szMethod: Uint16Array,
+    cchMethod: number,
+    pchMethod: Uint32Array,
+    pdwAttr: Uint32Array,
+    ppvSigBlob: BigUint64Array,
+    pcbSigBlob: Uint32Array,
+    pulCodeRVA: Uint32Array,
+    pdvImplFlags: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      30,
+      {
+        parameters: [
+          "pointer",
+          "u32",
+          "pointer",
+          "pointer",
+          "usize",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      tkMethodDef,
+      ptkClass,
+      szMethod,
+      cchMethod,
+      pchMethod,
+      pdwAttr,
+      ppvSigBlob,
+      pcbSigBlob,
+      pulCodeRVA,
+      pdvImplFlags,
+    );
+  }
+
+  GetParamProps(
+    tkParamDef: number,
+    ptkMethodDef: Uint32Array,
+    pulSequence: Uint32Array,
+    szName: Uint16Array,
+    cchName: number,
+    pchName: Uint32Array,
+    pdwAttr: Uint32Array,
+    pdwCPlusTypeFlag: Uint32Array,
+    ppValue: BigUint64Array,
+    pcchValue: BigUint64Array,
+  ): number {
+    const fn = this._getFunction(
+      59,
+      {
+        parameters: [
+          "pointer",
+          "u32",
+          "pointer",
+          "pointer",
+          "pointer",
+          "usize",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      tkParamDef,
+      ptkMethodDef,
+      pulSequence,
+      szName,
+      cchName,
+      pchName,
+      pdwAttr,
+      pdwCPlusTypeFlag,
+      ppValue,
+      pcchValue,
     );
   }
 
