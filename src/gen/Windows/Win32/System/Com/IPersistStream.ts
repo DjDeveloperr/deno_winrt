@@ -13,15 +13,19 @@ import { ULARGE_INTEGER } from "../../../../Windows/Win32/Foundation/ULARGE_INTE
 export class IPersistStream extends IPersist {
   static GUID = GUID.fromString("{00000109-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IPersistStream";
+  }
+
   IsDirty(): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: [],
+          parameters: ["pointer"],
           result: "pointer",
         } as const,
-      )(),
+      )(this._ptr),
     );
   }
 
@@ -30,12 +34,12 @@ export class IPersistStream extends IPersist {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pStm)),
+      )(this._ptr, toPointer(pStm)),
     );
   }
 
@@ -45,12 +49,12 @@ export class IPersistStream extends IPersist {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pStm), toPointer(fClearDirty)),
+      )(this._ptr, toPointer(pStm), toPointer(fClearDirty)),
     );
   }
 
@@ -59,12 +63,12 @@ export class IPersistStream extends IPersist {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pcbSize)),
+      )(this._ptr, toPointer(pcbSize)),
     );
   }
 }

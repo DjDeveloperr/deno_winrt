@@ -15,6 +15,10 @@ import { STATSTG } from "../../../../Windows/Win32/System/Com/STATSTG.ts";
 export class IStream extends ISequentialStream {
   static GUID = GUID.fromString("{0000000C-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IStream";
+  }
+
   Seek(
     dlibMove: LARGE_INTEGER,
     dwOrigin: STREAM_SEEK,
@@ -22,12 +26,17 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(dlibMove), toPointer(dwOrigin), toPointer(plibNewPosition)),
+      )(
+        this._ptr,
+        toPointer(dlibMove),
+        toPointer(dwOrigin),
+        toPointer(plibNewPosition),
+      ),
     );
   }
 
@@ -36,12 +45,12 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(libNewSize)),
+      )(this._ptr, toPointer(libNewSize)),
     );
   }
 
@@ -53,12 +62,13 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pstm),
         toPointer(cb),
         toPointer(pcbRead),
@@ -72,24 +82,24 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(grfCommitFlags)),
+      )(this._ptr, toPointer(grfCommitFlags)),
     );
   }
 
   Revert(): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: [],
+          parameters: ["pointer"],
           result: "pointer",
         } as const,
-      )(),
+      )(this._ptr),
     );
   }
 
@@ -100,12 +110,12 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        10,
         {
-          parameters: ["pointer", "pointer", "u32"],
+          parameters: ["pointer", "pointer", "pointer", "u32"],
           result: "pointer",
         } as const,
-      )(toPointer(libOffset), toPointer(cb), dwLockType),
+      )(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType),
     );
   }
 
@@ -116,12 +126,12 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        11,
         {
-          parameters: ["pointer", "pointer", "u32"],
+          parameters: ["pointer", "pointer", "pointer", "u32"],
           result: "pointer",
         } as const,
-      )(toPointer(libOffset), toPointer(cb), dwLockType),
+      )(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType),
     );
   }
 
@@ -131,12 +141,12 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        12,
         {
-          parameters: ["pointer", "u32"],
+          parameters: ["pointer", "pointer", "u32"],
           result: "pointer",
         } as const,
-      )(toPointer(pstatstg), grfStatFlag),
+      )(this._ptr, toPointer(pstatstg), grfStatFlag),
     );
   }
 
@@ -145,12 +155,12 @@ export class IStream extends ISequentialStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        13,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppstm)),
+      )(this._ptr, toPointer(ppstm)),
     );
   }
 }

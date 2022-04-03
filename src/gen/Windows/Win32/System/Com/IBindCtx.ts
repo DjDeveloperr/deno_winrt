@@ -14,17 +14,21 @@ import { IEnumString } from "../../../../Windows/Win32/System/Com/IEnumString.ts
 export class IBindCtx extends IUnknown {
   static GUID = GUID.fromString("{0000000E-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IBindCtx";
+  }
+
   RegisterObjectBound(
     punk: IUnknown,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(punk)),
+      )(this._ptr, toPointer(punk)),
     );
   }
 
@@ -33,24 +37,24 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(punk)),
+      )(this._ptr, toPointer(punk)),
     );
   }
 
   ReleaseBoundObjects(): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: [],
+          parameters: ["pointer"],
           result: "pointer",
         } as const,
-      )(),
+      )(this._ptr),
     );
   }
 
@@ -59,12 +63,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbindopts)),
+      )(this._ptr, toPointer(pbindopts)),
     );
   }
 
@@ -73,12 +77,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbindopts)),
+      )(this._ptr, toPointer(pbindopts)),
     );
   }
 
@@ -87,12 +91,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pprot)),
+      )(this._ptr, toPointer(pprot)),
     );
   }
 
@@ -102,12 +106,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszKey), toPointer(punk)),
+      )(this._ptr, toPointer(pszKey), toPointer(punk)),
     );
   }
 
@@ -117,12 +121,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        10,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszKey), toPointer(ppunk)),
+      )(this._ptr, toPointer(pszKey), toPointer(ppunk)),
     );
   }
 
@@ -131,12 +135,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        11,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppenum)),
+      )(this._ptr, toPointer(ppenum)),
     );
   }
 
@@ -145,12 +149,12 @@ export class IBindCtx extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        12,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszKey)),
+      )(this._ptr, toPointer(pszKey)),
     );
   }
 }

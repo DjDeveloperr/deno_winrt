@@ -14,6 +14,10 @@ import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
 export class IShellItem extends IUnknown {
   static GUID = GUID.fromString("{43826D1E-E718-42EE-BC55-A1E261C37BFE}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.IShellItem";
+  }
+
   BindToHandler(
     pbc: IBindCtx,
     bhid: PointerConvertible<Guid>,
@@ -22,12 +26,18 @@ export class IShellItem extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbc), toPointer(bhid), toPointer(riid), toPointer(ppv)),
+      )(
+        this._ptr,
+        toPointer(pbc),
+        toPointer(bhid),
+        toPointer(riid),
+        toPointer(ppv),
+      ),
     );
   }
 
@@ -36,12 +46,12 @@ export class IShellItem extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppsi)),
+      )(this._ptr, toPointer(ppsi)),
     );
   }
 
@@ -51,12 +61,12 @@ export class IShellItem extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(sigdnName), toPointer(ppszName)),
+      )(this._ptr, toPointer(sigdnName), toPointer(ppszName)),
     );
   }
 
@@ -66,12 +76,12 @@ export class IShellItem extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["u32", "pointer"],
+          parameters: ["pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(sfgaoMask, toPointer(psfgaoAttribs)),
+      )(this._ptr, sfgaoMask, toPointer(psfgaoAttribs)),
     );
   }
 
@@ -82,12 +92,12 @@ export class IShellItem extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer", "u32", "pointer"],
+          parameters: ["pointer", "pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(psi), hint, toPointer(piOrder)),
+      )(this._ptr, toPointer(psi), hint, toPointer(piOrder)),
     );
   }
 }

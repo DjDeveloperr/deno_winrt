@@ -36,13 +36,19 @@ ole32.CoInitializeEx(null, 0x02 | 0x04);
 
 export class COMObject {
   _ptr: Deno.UnsafePointer;
-  protected _vtable: Deno.UnsafePointerView;
+  #vtable?: Deno.UnsafePointerView;
+
+  protected get _vtable() {
+    if (!this.#vtable) {
+      const view = new Deno.UnsafePointerView(this._ptr);
+      const vtable = new Deno.UnsafePointer(view.getBigUint64(0));
+      this.#vtable = new Deno.UnsafePointerView(vtable);
+    }
+    return this.#vtable;
+  }
 
   constructor(ptr: Deno.UnsafePointer) {
     this._ptr = ptr;
-    const view = new Deno.UnsafePointerView(ptr);
-    const vtable = new Deno.UnsafePointer(view.getBigUint64(0));
-    this._vtable = new Deno.UnsafePointerView(vtable);
   }
 
   protected _getFunction<Fn extends Deno.ForeignFunction>(
@@ -95,7 +101,9 @@ export function stringFromGUID(
   return String.fromCharCode(...str);
 }
 
-export function createInstance<I extends typeof IUnknown>(
+export function createInstance<
+  I extends { GUID: GUID } & (new (ptr: Deno.UnsafePointer) => InstanceType<I>),
+>(
   clsid: GUIDConvertible,
   iid: I,
 ): InstanceType<I> {

@@ -10,6 +10,10 @@ import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
 export class IUnknown extends COMObject {
   static GUID = GUID.fromString("{00000000-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IUnknown";
+  }
+
   QueryInterface(
     riid: PointerConvertible<Guid>,
     ppvObject: PointerConvertible<PointerConvertible<void>>,
@@ -18,30 +22,30 @@ export class IUnknown extends COMObject {
       this._getFunction(
         0,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(riid), toPointer(ppvObject)),
+      )(this._ptr, toPointer(riid), toPointer(ppvObject)),
     );
   }
 
   AddRef(): number {
     return this._getFunction(
-      0,
+      1,
       {
-        parameters: [],
+        parameters: ["pointer"],
         result: "u32",
       } as const,
-    )();
+    )(this._ptr);
   }
 
   Release(): number {
     return this._getFunction(
-      0,
+      2,
       {
-        parameters: [],
+        parameters: ["pointer"],
         result: "u32",
       } as const,
-    )();
+    )(this._ptr);
   }
 }

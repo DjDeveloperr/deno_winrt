@@ -13,6 +13,10 @@ import { IEnumMoniker } from "../../../../Windows/Win32/System/Com/IEnumMoniker.
 export class IRunningObjectTable extends IUnknown {
   static GUID = GUID.fromString("{00000010-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IRunningObjectTable";
+  }
+
   Register(
     grfFlags: number,
     punkObject: IUnknown,
@@ -21,12 +25,13 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["u32", "pointer", "pointer", "pointer"],
+          parameters: ["pointer", "u32", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         grfFlags,
         toPointer(punkObject),
         toPointer(pmkObjectName),
@@ -40,12 +45,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["u32"],
+          parameters: ["pointer", "u32"],
           result: "pointer",
         } as const,
-      )(dwRegister),
+      )(this._ptr, dwRegister),
     );
   }
 
@@ -54,12 +59,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkObjectName)),
+      )(this._ptr, toPointer(pmkObjectName)),
     );
   }
 
@@ -69,12 +74,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkObjectName), toPointer(ppunkObject)),
+      )(this._ptr, toPointer(pmkObjectName), toPointer(ppunkObject)),
     );
   }
 
@@ -84,12 +89,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["u32", "pointer"],
+          parameters: ["pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(dwRegister, toPointer(pfiletime)),
+      )(this._ptr, dwRegister, toPointer(pfiletime)),
     );
   }
 
@@ -99,12 +104,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkObjectName), toPointer(pfiletime)),
+      )(this._ptr, toPointer(pmkObjectName), toPointer(pfiletime)),
     );
   }
 
@@ -113,12 +118,12 @@ export class IRunningObjectTable extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppenumMoniker)),
+      )(this._ptr, toPointer(ppenumMoniker)),
     );
   }
 }

@@ -10,6 +10,10 @@ import {
 export class ISequentialStream extends IUnknown {
   static GUID = GUID.fromString("{0C733A30-2A1C-11CE-ADE5-00AA0044773D}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.ISequentialStream";
+  }
+
   Read(
     pv: PointerConvertible<void>,
     cb: number,
@@ -17,12 +21,12 @@ export class ISequentialStream extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["pointer", "u32", "pointer"],
+          parameters: ["pointer", "pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pv), cb, toPointer(pcbRead)),
+      )(this._ptr, toPointer(pv), cb, toPointer(pcbRead)),
     );
   }
 
@@ -33,12 +37,12 @@ export class ISequentialStream extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["pointer", "u32", "pointer"],
+          parameters: ["pointer", "pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pv), cb, toPointer(pcbWritten)),
+      )(this._ptr, toPointer(pv), cb, toPointer(pcbWritten)),
     );
   }
 }

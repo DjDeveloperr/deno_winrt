@@ -91,7 +91,7 @@ export class Emitter {
     return type;
   }
 
-  emitMethod(method: winmd.Method, imports: Set<string>) {
+  emitMethod(addr: number, method: winmd.Method, imports: Set<string>) {
     let source = `  ${method.name}${
       method.parameters.length === 0
         ? "()"
@@ -113,14 +113,14 @@ export class Emitter {
         : undefined;
     source += `    return ${
       wrapComObject ? `new ${wrapComObject}(` : ""
-    }this._getFunction(0, {\n`;
-    source += `      parameters: [${
+    }this._getFunction(${addr}, {\n`;
+    source += `      parameters: ["pointer", ${
       method.parameters.map((p) => `"${typeToFFI(p.type)}"`).join(", ")
     }],\n`;
     source += `      result: "${
       method.returnType ? typeToFFI(method.returnType.type) : "void"
     }",\n`;
-    source += `    } as const)(${
+    source += `    } as const)(this._ptr, ${
       method.parameters.map((e) => {
         const ffi = typeToFFI(e.type);
         if (ffi === "pointer") {
@@ -163,7 +163,11 @@ export class Emitter {
 
     source += `  static GUID = GUID.fromString("${
       (def.guid ?? new GUID(new Uint8Array(16))).toString()
-    }");\n`;
+    }");\n\n`;
+
+    source += `  [Symbol.for("COMObject.name")]() {\n`;
+    source += `    return "${def.name}";\n`;
+    source += `  }\n`;
 
     if (def.fields.length !== 0) {
       source += "\n";
@@ -175,7 +179,9 @@ export class Emitter {
     if (def.methods.length !== 0) {
       source += "\n";
       source += def.methods
-        .map((method) => this.emitMethod(method, imports))
+        .map((method, i) =>
+          this.emitMethod(i + def.baseVtableAddr, method, imports)
+        )
         .join("\n\n") + "\n";
     }
 

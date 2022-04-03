@@ -8,6 +8,10 @@ import {
 export class GETPROPERTYSTOREFLAGS extends COMObject {
   static GUID = GUID.fromString("{00000000-0000-0000-0000-000000000000}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS";
+  }
+
   // value__: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
   // GPS_DEFAULT: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
   // GPS_HANDLERPROPERTIESONLY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;

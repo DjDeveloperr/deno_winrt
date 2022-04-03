@@ -11,6 +11,10 @@ import {
 export class IEnumShellItems extends IUnknown {
   static GUID = GUID.fromString("{70629033-E363-4A28-A567-0DB78006E6D7}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.IEnumShellItems";
+  }
+
   Next(
     celt: number,
     rgelt: PointerConvertible<IShellItem>,
@@ -18,12 +22,12 @@ export class IEnumShellItems extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["u32", "pointer", "pointer"],
+          parameters: ["pointer", "u32", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(celt, toPointer(rgelt), toPointer(pceltFetched)),
+      )(this._ptr, celt, toPointer(rgelt), toPointer(pceltFetched)),
     );
   }
 
@@ -32,24 +36,24 @@ export class IEnumShellItems extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["u32"],
+          parameters: ["pointer", "u32"],
           result: "pointer",
         } as const,
-      )(celt),
+      )(this._ptr, celt),
     );
   }
 
   Reset(): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: [],
+          parameters: ["pointer"],
           result: "pointer",
         } as const,
-      )(),
+      )(this._ptr),
     );
   }
 
@@ -58,12 +62,12 @@ export class IEnumShellItems extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppenum)),
+      )(this._ptr, toPointer(ppenum)),
     );
   }
 }

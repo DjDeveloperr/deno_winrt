@@ -16,6 +16,10 @@ import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
 export class IMoniker extends IPersistStream {
   static GUID = GUID.fromString("{0000000F-0000-0000-C000-000000000046}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.System.Com.IMoniker";
+  }
+
   BindToObject(
     pbc: IBindCtx,
     pmkToLeft: IMoniker,
@@ -24,12 +28,13 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pbc),
         toPointer(pmkToLeft),
         toPointer(riidResult),
@@ -46,12 +51,13 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pbc),
         toPointer(pmkToLeft),
         toPointer(riid),
@@ -68,12 +74,13 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        10,
         {
-          parameters: ["pointer", "u32", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "u32", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pbc),
         dwReduceHowFar,
         toPointer(ppmkToLeft),
@@ -89,12 +96,13 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        11,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pmkRight),
         toPointer(fOnlyIfNotGeneric),
         toPointer(ppmkComposite),
@@ -108,12 +116,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        12,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(fForward), toPointer(ppenumMoniker)),
+      )(this._ptr, toPointer(fForward), toPointer(ppenumMoniker)),
     );
   }
 
@@ -122,12 +130,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        13,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkOtherMoniker)),
+      )(this._ptr, toPointer(pmkOtherMoniker)),
     );
   }
 
@@ -136,12 +144,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        14,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pdwHash)),
+      )(this._ptr, toPointer(pdwHash)),
     );
   }
 
@@ -152,12 +160,17 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        15,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbc), toPointer(pmkToLeft), toPointer(pmkNewlyRunning)),
+      )(
+        this._ptr,
+        toPointer(pbc),
+        toPointer(pmkToLeft),
+        toPointer(pmkNewlyRunning),
+      ),
     );
   }
 
@@ -168,12 +181,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        16,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbc), toPointer(pmkToLeft), toPointer(pFileTime)),
+      )(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(pFileTime)),
     );
   }
 
@@ -182,12 +195,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        17,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppmk)),
+      )(this._ptr, toPointer(ppmk)),
     );
   }
 
@@ -197,12 +210,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        18,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkOther), toPointer(ppmkPrefix)),
+      )(this._ptr, toPointer(pmkOther), toPointer(ppmkPrefix)),
     );
   }
 
@@ -212,12 +225,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        19,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pmkOther), toPointer(ppmkRelPath)),
+      )(this._ptr, toPointer(pmkOther), toPointer(ppmkRelPath)),
     );
   }
 
@@ -228,12 +241,17 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        20,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pbc), toPointer(pmkToLeft), toPointer(ppszDisplayName)),
+      )(
+        this._ptr,
+        toPointer(pbc),
+        toPointer(pmkToLeft),
+        toPointer(ppszDisplayName),
+      ),
     );
   }
 
@@ -246,12 +264,20 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        21,
         {
-          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+          parameters: [
+            "pointer",
+            "pointer",
+            "pointer",
+            "pointer",
+            "pointer",
+            "pointer",
+          ],
           result: "pointer",
         } as const,
       )(
+        this._ptr,
         toPointer(pbc),
         toPointer(pmkToLeft),
         toPointer(pszDisplayName),
@@ -266,12 +292,12 @@ export class IMoniker extends IPersistStream {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        22,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pdwMksys)),
+      )(this._ptr, toPointer(pdwMksys)),
     );
   }
 }

@@ -11,17 +11,21 @@ import {
 export class IFileOpenDialog extends IFileDialog {
   static GUID = GUID.fromString("{D57C7288-D4AD-4768-BE02-9D969532D960}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.IFileOpenDialog";
+  }
+
   GetResults(
     ppenum: PointerConvertible<IShellItemArray>,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        27,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppenum)),
+      )(this._ptr, toPointer(ppenum)),
     );
   }
 
@@ -30,12 +34,12 @@ export class IFileOpenDialog extends IFileDialog {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        28,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppsai)),
+      )(this._ptr, toPointer(ppsai)),
     );
   }
 }

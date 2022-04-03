@@ -14,17 +14,21 @@ import { FDE_OVERWRITE_RESPONSE } from "../../../../Windows/Win32/UI/Shell/FDE_O
 export class IFileDialogEvents extends IUnknown {
   static GUID = GUID.fromString("{973510DB-7D7F-452B-8975-74A85828D354}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.IFileDialogEvents";
+  }
+
   OnFileOk(
     pfd: IFileDialog,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        3,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd)),
+      )(this._ptr, toPointer(pfd)),
     );
   }
 
@@ -34,12 +38,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd), toPointer(psiFolder)),
+      )(this._ptr, toPointer(pfd), toPointer(psiFolder)),
     );
   }
 
@@ -48,12 +52,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd)),
+      )(this._ptr, toPointer(pfd)),
     );
   }
 
@@ -62,12 +66,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd)),
+      )(this._ptr, toPointer(pfd)),
     );
   }
 
@@ -78,12 +82,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd), toPointer(psi), toPointer(pResponse)),
+      )(this._ptr, toPointer(pfd), toPointer(psi), toPointer(pResponse)),
     );
   }
 
@@ -92,12 +96,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd)),
+      )(this._ptr, toPointer(pfd)),
     );
   }
 
@@ -108,12 +112,12 @@ export class IFileDialogEvents extends IUnknown {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: ["pointer", "pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfd), toPointer(psi), toPointer(pResponse)),
+      )(this._ptr, toPointer(pfd), toPointer(psi), toPointer(pResponse)),
     );
   }
 }

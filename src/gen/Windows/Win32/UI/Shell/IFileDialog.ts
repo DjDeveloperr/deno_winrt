@@ -17,18 +17,22 @@ import { IShellItemFilter } from "../../../../Windows/Win32/UI/Shell/IShellItemF
 export class IFileDialog extends IModalWindow {
   static GUID = GUID.fromString("{42F85136-DB7E-439C-85F1-E4075D135FC8}");
 
+  [Symbol.for("COMObject.name")]() {
+    return "Windows.Win32.UI.Shell.IFileDialog";
+  }
+
   SetFileTypes(
     cFileTypes: number,
     rgFilterSpec: PointerConvertible<COMDLG_FILTERSPEC>,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        4,
         {
-          parameters: ["u32", "pointer"],
+          parameters: ["pointer", "u32", "pointer"],
           result: "pointer",
         } as const,
-      )(cFileTypes, toPointer(rgFilterSpec)),
+      )(this._ptr, cFileTypes, toPointer(rgFilterSpec)),
     );
   }
 
@@ -37,12 +41,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        5,
         {
-          parameters: ["u32"],
+          parameters: ["pointer", "u32"],
           result: "pointer",
         } as const,
-      )(iFileType),
+      )(this._ptr, iFileType),
     );
   }
 
@@ -51,12 +55,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        6,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(piFileType)),
+      )(this._ptr, toPointer(piFileType)),
     );
   }
 
@@ -66,12 +70,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        7,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfde), toPointer(pdwCookie)),
+      )(this._ptr, toPointer(pfde), toPointer(pdwCookie)),
     );
   }
 
@@ -80,12 +84,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        8,
         {
-          parameters: ["u32"],
+          parameters: ["pointer", "u32"],
           result: "pointer",
         } as const,
-      )(dwCookie),
+      )(this._ptr, dwCookie),
     );
   }
 
@@ -94,12 +98,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        9,
         {
-          parameters: ["u32"],
+          parameters: ["pointer", "u32"],
           result: "pointer",
         } as const,
-      )(fos),
+      )(this._ptr, fos),
     );
   }
 
@@ -108,12 +112,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        10,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pfos)),
+      )(this._ptr, toPointer(pfos)),
     );
   }
 
@@ -122,12 +126,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        11,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(psi)),
+      )(this._ptr, toPointer(psi)),
     );
   }
 
@@ -136,12 +140,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        12,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(psi)),
+      )(this._ptr, toPointer(psi)),
     );
   }
 
@@ -150,12 +154,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        13,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppsi)),
+      )(this._ptr, toPointer(ppsi)),
     );
   }
 
@@ -164,12 +168,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        14,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppsi)),
+      )(this._ptr, toPointer(ppsi)),
     );
   }
 
@@ -178,12 +182,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        15,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszName)),
+      )(this._ptr, toPointer(pszName)),
     );
   }
 
@@ -192,12 +196,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        16,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszName)),
+      )(this._ptr, toPointer(pszName)),
     );
   }
 
@@ -206,12 +210,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        17,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszTitle)),
+      )(this._ptr, toPointer(pszTitle)),
     );
   }
 
@@ -220,12 +224,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        18,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszText)),
+      )(this._ptr, toPointer(pszText)),
     );
   }
 
@@ -234,12 +238,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        19,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszLabel)),
+      )(this._ptr, toPointer(pszLabel)),
     );
   }
 
@@ -248,12 +252,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        20,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(ppsi)),
+      )(this._ptr, toPointer(ppsi)),
     );
   }
 
@@ -263,12 +267,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        21,
         {
-          parameters: ["pointer", "pointer"],
+          parameters: ["pointer", "pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(psi), toPointer(fdap)),
+      )(this._ptr, toPointer(psi), toPointer(fdap)),
     );
   }
 
@@ -277,12 +281,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        22,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pszDefaultExtension)),
+      )(this._ptr, toPointer(pszDefaultExtension)),
     );
   }
 
@@ -291,12 +295,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        23,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(hr)),
+      )(this._ptr, toPointer(hr)),
     );
   }
 
@@ -305,24 +309,24 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        24,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(guid)),
+      )(this._ptr, toPointer(guid)),
     );
   }
 
   ClearClientData(): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        25,
         {
-          parameters: [],
+          parameters: ["pointer"],
           result: "pointer",
         } as const,
-      )(),
+      )(this._ptr),
     );
   }
 
@@ -331,12 +335,12 @@ export class IFileDialog extends IModalWindow {
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
-        0,
+        26,
         {
-          parameters: ["pointer"],
+          parameters: ["pointer", "pointer"],
           result: "pointer",
         } as const,
-      )(toPointer(pFilter)),
+      )(this._ptr, toPointer(pFilter)),
     );
   }
 }

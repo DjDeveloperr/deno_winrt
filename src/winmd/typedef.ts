@@ -325,6 +325,19 @@ export class TypeDef {
     return this.#interfaces;
   }
 
+  #cachedVtableAddr: number | undefined;
+
+  get baseVtableAddr(): number {
+    if (this.interfaces.length === 0) return 0;
+    if (this.#cachedVtableAddr) return this.#cachedVtableAddr;
+    const iface =
+      [...this.interfaces].sort((a, b) =>
+        b.baseVtableAddr - a.baseVtableAddr
+      )[0];
+    return (this.#cachedVtableAddr = iface.baseVtableAddr +
+      iface.methods.length);
+  }
+
   [Symbol.for("Deno.customInspect")]() {
     return `TypeDef${this.isClass ? "<Class>" : ""}${
       this.isInterface ? "<Interface>" : ""
