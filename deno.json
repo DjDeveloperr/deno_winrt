@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "test": "deno run -A --unstable --no-check main.ts"
+    "test": "deno run -A --unstable --no-check main.ts",
+    "gen": "deno run -A --unstable --no-check ./src/winmd/gen.ts"
   }
 }

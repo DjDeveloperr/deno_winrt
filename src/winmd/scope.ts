@@ -8,6 +8,12 @@ export class Scope {
     this.com = com;
   }
 
+  get moduleToken() {
+    const tok = new Uint32Array(1);
+    this.com.GetModuleFromScope(tok);
+    return tok[0];
+  }
+
   get typeDefs() {
     if (this.#typeDefs.length === 0) {
       const phEnum = new BigUint64Array(1);

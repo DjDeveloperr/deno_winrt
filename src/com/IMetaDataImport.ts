@@ -100,6 +100,17 @@ export class IMetaDataImport extends IUnknown {
     );
   }
 
+  GetModuleFromScope(ptkModule: Uint32Array): number {
+    const fn = this._getFunction(
+      11,
+      {
+        parameters: ["pointer", "pointer"],
+        result: "isize",
+      } as const,
+    );
+    return fn(this._ptr, ptkModule);
+  }
+
   GetInterfaceImplProps(
     tkInterfaceImpl: number,
     ptkClass: Uint32Array,
@@ -295,6 +306,55 @@ export class IMetaDataImport extends IUnknown {
       pcbSigBlob,
       pulCodeRVA,
       pdvImplFlags,
+    );
+  }
+
+  GetFieldProps(
+    tkFieldDef: number,
+    ptkTypeDef: Uint32Array,
+    szField: Uint16Array,
+    cchField: number,
+    pchField: Uint32Array,
+    pdwAttr: Uint32Array,
+    ppvSigBlob: BigUint64Array,
+    pcbSigBlob: Uint32Array,
+    pdwCPlusTypeFlag: Uint32Array,
+    ppValue: BigUint64Array,
+    pcchValue: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      57,
+      {
+        parameters: [
+          "pointer",
+          "u32",
+          "pointer",
+          "pointer",
+          "usize",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+          "pointer",
+        ],
+        result: "isize",
+      } as const,
+    );
+    return fn(
+      this._ptr,
+      tkFieldDef,
+      ptkTypeDef,
+      szField,
+      cchField,
+      pchField,
+      pdwAttr,
+      ppvSigBlob,
+      pcbSigBlob,
+      pdwCPlusTypeFlag,
+      ppValue,
+      pcchValue,
     );
   }
 

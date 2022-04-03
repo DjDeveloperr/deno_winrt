@@ -92,7 +92,7 @@ export function stringFromGUID(
   }
   const str = new Uint16Array(38);
   new Deno.UnsafePointerView(new Deno.UnsafePointer(ptr[0])).copyInto(str);
-  return new TextDecoder().decode(str);
+  return String.fromCharCode(...str);
 }
 
 export function createInstance<I extends typeof IUnknown>(
@@ -108,4 +108,46 @@ export function createInstance<I extends typeof IUnknown>(
     out,
   ));
   return new iid(new Deno.UnsafePointer(out[0])) as InstanceType<I>;
+}
+
+export type TypedArray =
+  | Uint8Array
+  | Uint16Array
+  | Uint32Array
+  | BigUint64Array
+  | Int8Array
+  | Int16Array
+  | Int32Array
+  | BigInt64Array
+  | Float32Array
+  | Float64Array
+  | Uint8ClampedArray;
+
+export type PointerConvertible<_PLACEHOLDER = unknown> =
+  | Deno.UnsafePointer
+  | null
+  | TypedArray
+  | COMObject
+  | bigint
+  | Deno.UnsafeFnPointer<Deno.ForeignFunction>;
+
+export function toPointer(
+  v: PointerConvertible,
+): Deno.UnsafePointer | null | TypedArray {
+  if (
+    v === null || v instanceof Deno.UnsafePointer ||
+    (typeof v === "object" && "buffer" in v && v.buffer instanceof ArrayBuffer)
+  ) {
+    return v;
+  } else if (v instanceof COMObject) {
+    return v._ptr;
+  } else if (typeof v === "bigint") {
+    return new Deno.UnsafePointer(v);
+  } else if (v instanceof Deno.UnsafeFnPointer) {
+    return v.pointer;
+  } else {
+    throw new Error(
+      `Unsupported value being converted to pointer: ${Deno.inspect(v)}`,
+    );
+  }
 }

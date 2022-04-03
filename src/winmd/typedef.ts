@@ -82,7 +82,7 @@ export class TypeDef {
     return this.parent?.name === "System.Enum";
   }
 
-  #initialize() {
+  #initialize(): void {
     if (!this.#initialized) {
       switch (this.token & 0xFF000000) {
         case 0x01000000: {
@@ -103,8 +103,25 @@ export class TypeDef {
 
           if (hr === 0) {
             this.#name = String.fromCharCode(
-              ...outName.subarray(0, pchName[0]),
+              ...outName.subarray(0, pchName[0] - 1),
             );
+
+            if (ptkResolutionScope[0] === 0 && this.token === 0x01000000) {
+              this.token = 0x01000000;
+              this.#name = "IInspectable";
+            } else if (ptkResolutionScope[0] === this.scope.moduleToken) {
+              const td = this.scope.typeDefs.find((e) => e.name === this.#name);
+              if (td && td.token !== this.token) {
+                this.token = td.token;
+                return this.#initialize();
+              }
+            } else if ((ptkResolutionScope[0] & 0xFF000000) === 0x01000000) {
+              throw new Error("unimplemented");
+            } else {
+              this.token = 0;
+              this.#initialized = true;
+              return;
+            }
           }
           break;
         }
@@ -311,6 +328,6 @@ export class TypeDef {
   [Symbol.for("Deno.customInspect")]() {
     return `TypeDef${this.isClass ? "<Class>" : ""}${
       this.isInterface ? "<Interface>" : ""
-    }(${this.name}, ${this.guid?.toString()})`;
+    }(${this.name})`;
   }
 }
