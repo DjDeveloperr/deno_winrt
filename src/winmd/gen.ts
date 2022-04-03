@@ -98,7 +98,11 @@ export class Emitter {
         : `(\n${
           method.parameters.map((param) => {
             const ty = this.processTypeId(param.type, imports);
-            return `    ${param.name}: ${ty},`;
+            return `    ${param.name}: ${ty}${
+              param.isOptional && typeToFFI(param.type) === "pointer"
+                ? " | null"
+                : ""
+            },`;
           }).join("\n")
         }\n  )`
     }: ${

@@ -18,7 +18,7 @@ export class IEnumShellItems extends IUnknown {
   Next(
     celt: number,
     rgelt: PointerConvertible<IShellItem>,
-    pceltFetched: PointerConvertible<number>,
+    pceltFetched: PointerConvertible<number> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(

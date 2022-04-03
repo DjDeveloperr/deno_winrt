@@ -18,7 +18,7 @@ export class IEnumMoniker extends IUnknown {
   Next(
     celt: number,
     rgelt: PointerConvertible<IMoniker>,
-    pceltFetched: PointerConvertible<number>,
+    pceltFetched: PointerConvertible<number> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(

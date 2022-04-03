@@ -137,16 +137,17 @@ export type PointerConvertible<_PLACEHOLDER = unknown> =
   | TypedArray
   | COMObject
   | bigint
-  | Deno.UnsafeFnPointer<Deno.ForeignFunction>;
+  | Deno.UnsafeFnPointer<Deno.ForeignFunction>
+  | undefined;
 
 export function toPointer(
   v: PointerConvertible,
 ): Deno.UnsafePointer | null | TypedArray {
   if (
-    v === null || v instanceof Deno.UnsafePointer ||
+    v === null || v === undefined || v instanceof Deno.UnsafePointer ||
     (typeof v === "object" && "buffer" in v && v.buffer instanceof ArrayBuffer)
   ) {
-    return v;
+    return v === undefined ? null : v;
   } else if (v instanceof COMObject) {
     return v._ptr;
   } else if (typeof v === "bigint") {

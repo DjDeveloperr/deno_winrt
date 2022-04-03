@@ -16,7 +16,7 @@ export class IModalWindow extends IUnknown {
   }
 
   Show(
-    hwndOwner: HWND,
+    hwndOwner: HWND | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(

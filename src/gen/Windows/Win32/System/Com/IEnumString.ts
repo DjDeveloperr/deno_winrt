@@ -18,7 +18,7 @@ export class IEnumString extends IUnknown {
   Next(
     celt: number,
     rgelt: PointerConvertible<PWSTR>,
-    pceltFetched: PointerConvertible<number>,
+    pceltFetched: PointerConvertible<number> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(

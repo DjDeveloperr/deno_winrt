@@ -22,7 +22,7 @@ export class IMoniker extends IPersistStream {
 
   BindToObject(
     pbc: IBindCtx,
-    pmkToLeft: IMoniker,
+    pmkToLeft: IMoniker | null,
     riidResult: PointerConvertible<Guid>,
     ppvResult: PointerConvertible<PointerConvertible<void>>,
   ): HRESULT {
@@ -45,7 +45,7 @@ export class IMoniker extends IPersistStream {
 
   BindToStorage(
     pbc: IBindCtx,
-    pmkToLeft: IMoniker,
+    pmkToLeft: IMoniker | null,
     riid: PointerConvertible<Guid>,
     ppvObj: PointerConvertible<PointerConvertible<void>>,
   ): HRESULT {

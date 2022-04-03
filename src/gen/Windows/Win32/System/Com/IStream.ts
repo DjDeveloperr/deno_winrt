@@ -22,7 +22,7 @@ export class IStream extends ISequentialStream {
   Seek(
     dlibMove: LARGE_INTEGER,
     dwOrigin: STREAM_SEEK,
-    plibNewPosition: PointerConvertible<ULARGE_INTEGER>,
+    plibNewPosition: PointerConvertible<ULARGE_INTEGER> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
@@ -57,8 +57,8 @@ export class IStream extends ISequentialStream {
   CopyTo(
     pstm: IStream,
     cb: ULARGE_INTEGER,
-    pcbRead: PointerConvertible<ULARGE_INTEGER>,
-    pcbWritten: PointerConvertible<ULARGE_INTEGER>,
+    pcbRead: PointerConvertible<ULARGE_INTEGER> | null,
+    pcbWritten: PointerConvertible<ULARGE_INTEGER> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(

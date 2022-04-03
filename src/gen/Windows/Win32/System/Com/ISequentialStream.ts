@@ -17,7 +17,7 @@ export class ISequentialStream extends IUnknown {
   Read(
     pv: PointerConvertible<void>,
     cb: number,
-    pcbRead: PointerConvertible<number>,
+    pcbRead: PointerConvertible<number> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
@@ -33,7 +33,7 @@ export class ISequentialStream extends IUnknown {
   Write(
     pv: PointerConvertible<void>,
     cb: number,
-    pcbWritten: PointerConvertible<number>,
+    pcbWritten: PointerConvertible<number> | null,
   ): HRESULT {
     return new HRESULT(
       this._getFunction(
