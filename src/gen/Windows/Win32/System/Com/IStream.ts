@@ -1,15 +1,7 @@
 import { GUID } from "../../../../../guid.ts";
 import { ISequentialStream } from "../../../../Windows/Win32/System/Com/ISequentialStream.ts";
-import { LARGE_INTEGER } from "../../../../Windows/Win32/Foundation/LARGE_INTEGER.ts";
-import { STREAM_SEEK } from "../../../../Windows/Win32/System/Com/STREAM_SEEK.ts";
-import { ULARGE_INTEGER } from "../../../../Windows/Win32/Foundation/ULARGE_INTEGER.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-import { STGC } from "../../../../Windows/Win32/System/Com/StructuredStorage/STGC.ts";
+import { PointerConvertible } from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 import { STATSTG } from "../../../../Windows/Win32/System/Com/STATSTG.ts";
 
 export class IStream extends ISequentialStream {
@@ -20,147 +12,100 @@ export class IStream extends ISequentialStream {
   }
 
   Seek(
-    dlibMove: LARGE_INTEGER,
-    dwOrigin: STREAM_SEEK,
-    plibNewPosition: PointerConvertible<ULARGE_INTEGER> | null,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        5,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(dlibMove),
-        toPointer(dwOrigin),
-        toPointer(plibNewPosition),
-      ),
-    );
+    dlibMove: bigint,
+    dwOrigin: number /* STREAM_SEEK */,
+    plibNewPosition: PointerConvertible<bigint> | null,
+  ): number {
+    const result = this._getFunction(5, {
+      parameters: ["pointer", "pointer", "i16", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(dlibMove), dwOrigin, toPointer(plibNewPosition));
+    return result;
   }
 
   SetSize(
-    libNewSize: ULARGE_INTEGER,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        6,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(libNewSize)),
-    );
+    libNewSize: bigint,
+  ): number {
+    const result = this._getFunction(6, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(libNewSize));
+    return result;
   }
 
   CopyTo(
     pstm: IStream,
-    cb: ULARGE_INTEGER,
-    pcbRead: PointerConvertible<ULARGE_INTEGER> | null,
-    pcbWritten: PointerConvertible<ULARGE_INTEGER> | null,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        7,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pstm),
-        toPointer(cb),
-        toPointer(pcbRead),
-        toPointer(pcbWritten),
-      ),
-    );
+    cb: bigint,
+    pcbRead: PointerConvertible<bigint> | null,
+    pcbWritten: PointerConvertible<bigint> | null,
+  ): number {
+    const result = this._getFunction(7, {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pstm), toPointer(cb), toPointer(pcbRead), toPointer(pcbWritten));
+    return result;
   }
 
   Commit(
-    grfCommitFlags: STGC,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        8,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(grfCommitFlags)),
-    );
+    grfCommitFlags: number /* STGC */,
+  ): number {
+    const result = this._getFunction(8, {
+      parameters: ["pointer", "i16"],
+      result: "i32",
+    } as const)(this._ptr, grfCommitFlags);
+    return result;
   }
 
-  Revert(): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        9,
-        {
-          parameters: ["pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr),
-    );
+  Revert(): number {
+    const result = this._getFunction(9, {
+      parameters: ["pointer", ],
+      result: "i32",
+    } as const)(this._ptr, );
+    return result;
   }
 
   LockRegion(
-    libOffset: ULARGE_INTEGER,
-    cb: ULARGE_INTEGER,
+    libOffset: bigint,
+    cb: bigint,
     dwLockType: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        10,
-        {
-          parameters: ["pointer", "pointer", "pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType),
-    );
+  ): number {
+    const result = this._getFunction(10, {
+      parameters: ["pointer", "pointer", "pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType);
+    return result;
   }
 
   UnlockRegion(
-    libOffset: ULARGE_INTEGER,
-    cb: ULARGE_INTEGER,
+    libOffset: bigint,
+    cb: bigint,
     dwLockType: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        11,
-        {
-          parameters: ["pointer", "pointer", "pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType),
-    );
+  ): number {
+    const result = this._getFunction(11, {
+      parameters: ["pointer", "pointer", "pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(libOffset), toPointer(cb), dwLockType);
+    return result;
   }
 
   Stat(
     pstatstg: PointerConvertible<STATSTG>,
     grfStatFlag: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        12,
-        {
-          parameters: ["pointer", "pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pstatstg), grfStatFlag),
-    );
+  ): number {
+    const result = this._getFunction(12, {
+      parameters: ["pointer", "pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pstatstg), grfStatFlag);
+    return result;
   }
 
   Clone(
     ppstm: PointerConvertible<IStream>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        13,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppstm)),
-    );
+  ): number {
+    const result = this._getFunction(13, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppstm));
+    return result;
   }
 }

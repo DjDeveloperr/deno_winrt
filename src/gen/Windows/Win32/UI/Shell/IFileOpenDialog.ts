@@ -1,12 +1,8 @@
 import { GUID } from "../../../../../guid.ts";
 import { IFileDialog } from "../../../../Windows/Win32/UI/Shell/IFileDialog.ts";
+import { PointerConvertible } from "../../../../../com.ts";
 import { IShellItemArray } from "../../../../Windows/Win32/UI/Shell/IShellItemArray.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 
 export class IFileOpenDialog extends IFileDialog {
   static GUID = GUID.fromString("{D57C7288-D4AD-4768-BE02-9D969532D960}");
@@ -17,29 +13,21 @@ export class IFileOpenDialog extends IFileDialog {
 
   GetResults(
     ppenum: PointerConvertible<IShellItemArray>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        27,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppenum)),
-    );
+  ): number {
+    const result = this._getFunction(27, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppenum));
+    return result;
   }
 
   GetSelectedItems(
     ppsai: PointerConvertible<IShellItemArray>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        28,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppsai)),
-    );
+  ): number {
+    const result = this._getFunction(28, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppsai));
+    return result;
   }
 }

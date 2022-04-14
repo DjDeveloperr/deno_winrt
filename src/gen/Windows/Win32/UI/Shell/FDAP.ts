@@ -1,18 +1,4 @@
-import { GUID } from "../../../../../guid.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-
-export class FDAP extends COMObject {
-  static GUID = GUID.fromString("{00000000-0000-0000-0000-000000000000}");
-
-  [Symbol.for("COMObject.name")]() {
-    return "Windows.Win32.UI.Shell.FDAP";
-  }
-
-  // value__: Windows.Win32.UI.Shell.FDAP;
-  // FDAP_BOTTOM: Windows.Win32.UI.Shell.FDAP;
-  // FDAP_TOP: Windows.Win32.UI.Shell.FDAP;
+export class FDAP {
+  static FDAP_BOTTOM: number = 0;
+  static FDAP_TOP: number = 1;
 }

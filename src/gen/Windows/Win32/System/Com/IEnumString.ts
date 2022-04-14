@@ -1,12 +1,8 @@
 import { GUID } from "../../../../../guid.ts";
 import { IUnknown } from "../../../../Windows/Win32/System/Com/IUnknown.ts";
-import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
+import { PointerConvertible } from "../../../../../com.ts";
+import { PWSTRConvertible } from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 
 export class IEnumString extends IUnknown {
   static GUID = GUID.fromString("{00000101-0000-0000-C000-000000000046}");
@@ -17,57 +13,41 @@ export class IEnumString extends IUnknown {
 
   Next(
     celt: number,
-    rgelt: PointerConvertible<PWSTR>,
+    rgelt: PointerConvertible<PWSTRConvertible>,
     pceltFetched: PointerConvertible<number> | null,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        3,
-        {
-          parameters: ["pointer", "u32", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, celt, toPointer(rgelt), toPointer(pceltFetched)),
-    );
+  ): number {
+    const result = this._getFunction(3, {
+      parameters: ["pointer", "u32", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, celt, toPointer(rgelt), toPointer(pceltFetched));
+    return result;
   }
 
   Skip(
     celt: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        4,
-        {
-          parameters: ["pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, celt),
-    );
+  ): number {
+    const result = this._getFunction(4, {
+      parameters: ["pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, celt);
+    return result;
   }
 
-  Reset(): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        5,
-        {
-          parameters: ["pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr),
-    );
+  Reset(): number {
+    const result = this._getFunction(5, {
+      parameters: ["pointer", ],
+      result: "i32",
+    } as const)(this._ptr, );
+    return result;
   }
 
   Clone(
     ppenum: PointerConvertible<IEnumString>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        6,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppenum)),
-    );
+  ): number {
+    const result = this._getFunction(6, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppenum));
+    return result;
   }
 }

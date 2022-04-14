@@ -1,17 +1,12 @@
 import { GUID } from "../../../../../guid.ts";
 import { IModalWindow } from "../../../../Windows/Win32/UI/Shell/IModalWindow.ts";
+import { PointerConvertible } from "../../../../../com.ts";
 import { COMDLG_FILTERSPEC } from "../../../../Windows/Win32/UI/Shell/Common/COMDLG_FILTERSPEC.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 import { IFileDialogEvents } from "../../../../Windows/Win32/UI/Shell/IFileDialogEvents.ts";
 import { IShellItem } from "../../../../Windows/Win32/UI/Shell/IShellItem.ts";
-import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
-import { FDAP } from "../../../../Windows/Win32/UI/Shell/FDAP.ts";
-import { Guid } from "../../../../System/Guid.ts";
+import { PWSTRConvertible } from "../../../../../com.ts";
+import { toPWSTR } from "../../../../../com.ts";
 import { IShellItemFilter } from "../../../../Windows/Win32/UI/Shell/IShellItemFilter.ts";
 
 export class IFileDialog extends IModalWindow {
@@ -24,323 +19,231 @@ export class IFileDialog extends IModalWindow {
   SetFileTypes(
     cFileTypes: number,
     rgFilterSpec: PointerConvertible<COMDLG_FILTERSPEC>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        4,
-        {
-          parameters: ["pointer", "u32", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, cFileTypes, toPointer(rgFilterSpec)),
-    );
+  ): number {
+    const result = this._getFunction(4, {
+      parameters: ["pointer", "u32", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, cFileTypes, toPointer(rgFilterSpec));
+    return result;
   }
 
   SetFileTypeIndex(
     iFileType: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        5,
-        {
-          parameters: ["pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, iFileType),
-    );
+  ): number {
+    const result = this._getFunction(5, {
+      parameters: ["pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, iFileType);
+    return result;
   }
 
   GetFileTypeIndex(
     piFileType: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        6,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(piFileType)),
-    );
+  ): number {
+    const result = this._getFunction(6, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(piFileType));
+    return result;
   }
 
   Advise(
     pfde: IFileDialogEvents,
     pdwCookie: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        7,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pfde), toPointer(pdwCookie)),
-    );
+  ): number {
+    const result = this._getFunction(7, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pfde), toPointer(pdwCookie));
+    return result;
   }
 
   Unadvise(
     dwCookie: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        8,
-        {
-          parameters: ["pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, dwCookie),
-    );
+  ): number {
+    const result = this._getFunction(8, {
+      parameters: ["pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, dwCookie);
+    return result;
   }
 
   SetOptions(
     fos: number,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        9,
-        {
-          parameters: ["pointer", "u32"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, fos),
-    );
+  ): number {
+    const result = this._getFunction(9, {
+      parameters: ["pointer", "u32"],
+      result: "i32",
+    } as const)(this._ptr, fos);
+    return result;
   }
 
   GetOptions(
     pfos: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        10,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pfos)),
-    );
+  ): number {
+    const result = this._getFunction(10, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pfos));
+    return result;
   }
 
   SetDefaultFolder(
     psi: IShellItem,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        11,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi)),
-    );
+  ): number {
+    const result = this._getFunction(11, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi));
+    return result;
   }
 
   SetFolder(
     psi: IShellItem,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        12,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi)),
-    );
+  ): number {
+    const result = this._getFunction(12, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi));
+    return result;
   }
 
   GetFolder(
     ppsi: PointerConvertible<IShellItem>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        13,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppsi)),
-    );
+  ): number {
+    const result = this._getFunction(13, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppsi));
+    return result;
   }
 
   GetCurrentSelection(
     ppsi: PointerConvertible<IShellItem>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        14,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppsi)),
-    );
+  ): number {
+    const result = this._getFunction(14, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppsi));
+    return result;
   }
 
   SetFileName(
-    pszName: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        15,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszName)),
-    );
+    pszName: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(15, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszName));
+    return result;
   }
 
   GetFileName(
-    pszName: PointerConvertible<PWSTR>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        16,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszName)),
-    );
+    pszName: PointerConvertible<PWSTRConvertible>,
+  ): number {
+    const result = this._getFunction(16, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pszName));
+    return result;
   }
 
   SetTitle(
-    pszTitle: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        17,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszTitle)),
-    );
+    pszTitle: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(17, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszTitle));
+    return result;
   }
 
   SetOkButtonLabel(
-    pszText: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        18,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszText)),
-    );
+    pszText: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(18, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszText));
+    return result;
   }
 
   SetFileNameLabel(
-    pszLabel: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        19,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszLabel)),
-    );
+    pszLabel: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(19, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszLabel));
+    return result;
   }
 
   GetResult(
     ppsi: PointerConvertible<IShellItem>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        20,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppsi)),
-    );
+  ): number {
+    const result = this._getFunction(20, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppsi));
+    return result;
   }
 
   AddPlace(
     psi: IShellItem,
-    fdap: FDAP,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        21,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi), toPointer(fdap)),
-    );
+    fdap: number /* FDAP */,
+  ): number {
+    const result = this._getFunction(21, {
+      parameters: ["pointer", "pointer", "i16"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi), fdap);
+    return result;
   }
 
   SetDefaultExtension(
-    pszDefaultExtension: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        22,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszDefaultExtension)),
-    );
+    pszDefaultExtension: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(22, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszDefaultExtension));
+    return result;
   }
 
   Close(
-    hr: HRESULT,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        23,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(hr)),
-    );
+    hr: number,
+  ): number {
+    const result = this._getFunction(23, {
+      parameters: ["pointer", "i32"],
+      result: "i32",
+    } as const)(this._ptr, hr);
+    return result;
   }
 
   SetClientGuid(
-    guid: PointerConvertible<Guid>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        24,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(guid)),
-    );
+    guid: PointerConvertible<GUID>,
+  ): number {
+    const result = this._getFunction(24, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(guid));
+    return result;
   }
 
-  ClearClientData(): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        25,
-        {
-          parameters: ["pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr),
-    );
+  ClearClientData(): number {
+    const result = this._getFunction(25, {
+      parameters: ["pointer", ],
+      result: "i32",
+    } as const)(this._ptr, );
+    return result;
   }
 
   SetFilter(
     pFilter: IShellItemFilter,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        26,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pFilter)),
-    );
+  ): number {
+    const result = this._getFunction(26, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pFilter));
+    return result;
   }
 }

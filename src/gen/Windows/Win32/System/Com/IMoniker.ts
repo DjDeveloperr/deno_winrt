@@ -1,17 +1,11 @@
 import { GUID } from "../../../../../guid.ts";
 import { IPersistStream } from "../../../../Windows/Win32/System/Com/IPersistStream.ts";
 import { IBindCtx } from "../../../../Windows/Win32/System/Com/IBindCtx.ts";
-import { Guid } from "../../../../System/Guid.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-import { BOOL } from "../../../../Windows/Win32/Foundation/BOOL.ts";
+import { PointerConvertible } from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 import { IEnumMoniker } from "../../../../Windows/Win32/System/Com/IEnumMoniker.ts";
-import { FILETIME } from "../../../../Windows/Win32/Foundation/FILETIME.ts";
-import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
+import { PWSTRConvertible } from "../../../../../com.ts";
+import { toPWSTR } from "../../../../../com.ts";
 
 export class IMoniker extends IPersistStream {
   static GUID = GUID.fromString("{0000000F-0000-0000-C000-000000000046}");
@@ -23,47 +17,27 @@ export class IMoniker extends IPersistStream {
   BindToObject(
     pbc: IBindCtx,
     pmkToLeft: IMoniker | null,
-    riidResult: PointerConvertible<Guid>,
+    riidResult: PointerConvertible<GUID>,
     ppvResult: PointerConvertible<PointerConvertible<void>>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        8,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(pmkToLeft),
-        toPointer(riidResult),
-        toPointer(ppvResult),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(8, {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(riidResult), toPointer(ppvResult));
+    return result;
   }
 
   BindToStorage(
     pbc: IBindCtx,
     pmkToLeft: IMoniker | null,
-    riid: PointerConvertible<Guid>,
+    riid: PointerConvertible<GUID>,
     ppvObj: PointerConvertible<PointerConvertible<void>>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        9,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(pmkToLeft),
-        toPointer(riid),
-        toPointer(ppvObj),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(9, {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(riid), toPointer(ppvObj));
+    return result;
   }
 
   Reduce(
@@ -71,233 +45,146 @@ export class IMoniker extends IPersistStream {
     dwReduceHowFar: number,
     ppmkToLeft: PointerConvertible<IMoniker>,
     ppmkReduced: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        10,
-        {
-          parameters: ["pointer", "pointer", "u32", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        dwReduceHowFar,
-        toPointer(ppmkToLeft),
-        toPointer(ppmkReduced),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(10, {
+      parameters: ["pointer", "pointer", "u32", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), dwReduceHowFar, toPointer(ppmkToLeft), toPointer(ppmkReduced));
+    return result;
   }
 
   ComposeWith(
     pmkRight: IMoniker,
-    fOnlyIfNotGeneric: BOOL,
+    fOnlyIfNotGeneric: boolean,
     ppmkComposite: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        11,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pmkRight),
-        toPointer(fOnlyIfNotGeneric),
-        toPointer(ppmkComposite),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(11, {
+      parameters: ["pointer", "pointer", "i32", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pmkRight), fOnlyIfNotGeneric, toPointer(ppmkComposite));
+    return result;
   }
 
   Enum(
-    fForward: BOOL,
+    fForward: boolean,
     ppenumMoniker: PointerConvertible<IEnumMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        12,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(fForward), toPointer(ppenumMoniker)),
-    );
+  ): number {
+    const result = this._getFunction(12, {
+      parameters: ["pointer", "i32", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, fForward, toPointer(ppenumMoniker));
+    return result;
   }
 
   IsEqual(
     pmkOtherMoniker: IMoniker,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        13,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pmkOtherMoniker)),
-    );
+  ): number {
+    const result = this._getFunction(13, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pmkOtherMoniker));
+    return result;
   }
 
   Hash(
     pdwHash: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        14,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pdwHash)),
-    );
+  ): number {
+    const result = this._getFunction(14, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pdwHash));
+    return result;
   }
 
   IsRunning(
     pbc: IBindCtx,
     pmkToLeft: IMoniker,
     pmkNewlyRunning: IMoniker,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        15,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(pmkToLeft),
-        toPointer(pmkNewlyRunning),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(15, {
+      parameters: ["pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(pmkNewlyRunning));
+    return result;
   }
 
   GetTimeOfLastChange(
     pbc: IBindCtx,
     pmkToLeft: IMoniker,
-    pFileTime: PointerConvertible<FILETIME>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        16,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(pFileTime)),
-    );
+    pFileTime: PointerConvertible<Deno.UnsafePointer>,
+  ): number {
+    const result = this._getFunction(16, {
+      parameters: ["pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(pFileTime));
+    return result;
   }
 
   Inverse(
     ppmk: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        17,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppmk)),
-    );
+  ): number {
+    const result = this._getFunction(17, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppmk));
+    return result;
   }
 
   CommonPrefixWith(
     pmkOther: IMoniker,
     ppmkPrefix: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        18,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pmkOther), toPointer(ppmkPrefix)),
-    );
+  ): number {
+    const result = this._getFunction(18, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pmkOther), toPointer(ppmkPrefix));
+    return result;
   }
 
   RelativePathTo(
     pmkOther: IMoniker,
     ppmkRelPath: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        19,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pmkOther), toPointer(ppmkRelPath)),
-    );
+  ): number {
+    const result = this._getFunction(19, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pmkOther), toPointer(ppmkRelPath));
+    return result;
   }
 
   GetDisplayName(
     pbc: IBindCtx,
     pmkToLeft: IMoniker,
-    ppszDisplayName: PointerConvertible<PWSTR>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        20,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(pmkToLeft),
-        toPointer(ppszDisplayName),
-      ),
-    );
+    ppszDisplayName: PointerConvertible<PWSTRConvertible>,
+  ): number {
+    const result = this._getFunction(20, {
+      parameters: ["pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPointer(ppszDisplayName));
+    return result;
   }
 
   ParseDisplayName(
     pbc: IBindCtx,
     pmkToLeft: IMoniker,
-    pszDisplayName: PWSTR,
+    pszDisplayName: PWSTRConvertible,
     pchEaten: PointerConvertible<number>,
     ppmkOut: PointerConvertible<IMoniker>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        21,
-        {
-          parameters: [
-            "pointer",
-            "pointer",
-            "pointer",
-            "pointer",
-            "pointer",
-            "pointer",
-          ],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(pmkToLeft),
-        toPointer(pszDisplayName),
-        toPointer(pchEaten),
-        toPointer(ppmkOut),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(21, {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(pmkToLeft), toPWSTR(pszDisplayName), toPointer(pchEaten), toPointer(ppmkOut));
+    return result;
   }
 
   IsSystemMoniker(
     pdwMksys: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        22,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pdwMksys)),
-    );
+  ): number {
+    const result = this._getFunction(22, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pdwMksys));
+    return result;
   }
 }

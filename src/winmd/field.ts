@@ -1,5 +1,6 @@
 import { Scope } from "./scope.ts";
 import { TypeDef } from "./typedef.ts";
+import { TypeTuple } from "./typetuple.ts";
 
 export class Field {
   #initialized = false;
@@ -8,6 +9,8 @@ export class Field {
   #attr = 0;
   #sig!: Uint8Array;
   #cPlusTypeFlag = 0;
+  #pValue!: Deno.UnsafePointer;
+  #cchValue!: number;
 
   constructor(public scope: Scope, public token: number) {}
 
@@ -51,6 +54,8 @@ export class Field {
             this.#sig,
           );
         this.#type = new TypeDef(this.scope, ptkTypeDef[0]);
+        this.#pValue = new Deno.UnsafePointer(ppValue[0]);
+        this.#cchValue = pcchValue[0];
 
         this.#initialized = true;
       }
@@ -74,12 +79,26 @@ export class Field {
 
   get type() {
     this.#initialize();
-    return this.#type;
+    return new TypeTuple(this.scope, this.#sig).type;
   }
 
   get cPlusTypeFlag() {
     this.#initialize();
     return this.#cPlusTypeFlag;
+  }
+
+  get pValue() {
+    this.#initialize();
+    return this.#pValue;
+  }
+
+  get cchValue() {
+    this.#initialize();
+    return this.#cchValue;
+  }
+
+  get isStatic() {
+    return (this.#attr & 0x0010) !== 0;
   }
 
   [Symbol.for("Deno.customInspect")]() {

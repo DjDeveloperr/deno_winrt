@@ -1,11 +1,7 @@
 import { GUID } from "../../../../../guid.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-import { Guid } from "../../../../System/Guid.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
+import { COMObject } from "../../../../../com.ts";
+import { PointerConvertible } from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
 
 export class IUnknown extends COMObject {
   static GUID = GUID.fromString("{00000000-0000-0000-C000-000000000046}");
@@ -15,37 +11,29 @@ export class IUnknown extends COMObject {
   }
 
   QueryInterface(
-    riid: PointerConvertible<Guid>,
+    riid: PointerConvertible<GUID>,
     ppvObject: PointerConvertible<PointerConvertible<void>>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        0,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(riid), toPointer(ppvObject)),
-    );
+  ): number {
+    const result = this._getFunction(0, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(riid), toPointer(ppvObject));
+    return result;
   }
 
   AddRef(): number {
-    return this._getFunction(
-      1,
-      {
-        parameters: ["pointer"],
-        result: "u32",
-      } as const,
-    )(this._ptr);
+    const result = this._getFunction(1, {
+      parameters: ["pointer", ],
+      result: "u32",
+    } as const)(this._ptr, );
+    return result;
   }
 
   Release(): number {
-    return this._getFunction(
-      2,
-      {
-        parameters: ["pointer"],
-        result: "u32",
-      } as const,
-    )(this._ptr);
+    const result = this._getFunction(2, {
+      parameters: ["pointer", ],
+      result: "u32",
+    } as const)(this._ptr, );
+    return result;
   }
 }

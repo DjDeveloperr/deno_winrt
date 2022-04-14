@@ -1,31 +1,17 @@
-import { GUID } from "../../../../../../guid.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../../com.ts";
-
-export class GETPROPERTYSTOREFLAGS extends COMObject {
-  static GUID = GUID.fromString("{00000000-0000-0000-0000-000000000000}");
-
-  [Symbol.for("COMObject.name")]() {
-    return "Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS";
-  }
-
-  // value__: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_DEFAULT: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_HANDLERPROPERTIESONLY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_READWRITE: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_TEMPORARY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_FASTPROPERTIESONLY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_OPENSLOWITEM: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_DELAYCREATION: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_BESTEFFORT: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_NO_OPLOCK: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_PREFERQUERYPROPERTIES: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_EXTRINSICPROPERTIES: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_EXTRINSICPROPERTIESONLY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_VOLATILEPROPERTIES: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_VOLATILEPROPERTIESONLY: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
-  // GPS_MASK_VALID: Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS;
+export class GETPROPERTYSTOREFLAGS {
+  static GPS_DEFAULT: number = 0;
+  static GPS_HANDLERPROPERTIESONLY: number = 1;
+  static GPS_READWRITE: number = 2;
+  static GPS_TEMPORARY: number = 4;
+  static GPS_FASTPROPERTIESONLY: number = 8;
+  static GPS_OPENSLOWITEM: number = 16;
+  static GPS_DELAYCREATION: number = 32;
+  static GPS_BESTEFFORT: number = 64;
+  static GPS_NO_OPLOCK: number = 128;
+  static GPS_PREFERQUERYPROPERTIES: number = 256;
+  static GPS_EXTRINSICPROPERTIES: number = 512;
+  static GPS_EXTRINSICPROPERTIESONLY: number = 1024;
+  static GPS_VOLATILEPROPERTIES: number = 2048;
+  static GPS_VOLATILEPROPERTIESONLY: number = 4096;
+  static GPS_MASK_VALID: number = 8191;
 }

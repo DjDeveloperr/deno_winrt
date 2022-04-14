@@ -1,15 +1,9 @@
 import { GUID } from "../../../../../guid.ts";
 import { IUnknown } from "../../../../Windows/Win32/System/Com/IUnknown.ts";
 import { IBindCtx } from "../../../../Windows/Win32/System/Com/IBindCtx.ts";
-import { Guid } from "../../../../System/Guid.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-import { SIGDN } from "../../../../Windows/Win32/UI/Shell/SIGDN.ts";
-import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
+import { PointerConvertible } from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
+import { PWSTRConvertible } from "../../../../../com.ts";
 
 export class IShellItem extends IUnknown {
   static GUID = GUID.fromString("{43826D1E-E718-42EE-BC55-A1E261C37BFE}");
@@ -20,84 +14,58 @@ export class IShellItem extends IUnknown {
 
   BindToHandler(
     pbc: IBindCtx,
-    bhid: PointerConvertible<Guid>,
-    riid: PointerConvertible<Guid>,
+    bhid: PointerConvertible<GUID>,
+    riid: PointerConvertible<GUID>,
     ppv: PointerConvertible<PointerConvertible<void>>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        3,
-        {
-          parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(
-        this._ptr,
-        toPointer(pbc),
-        toPointer(bhid),
-        toPointer(riid),
-        toPointer(ppv),
-      ),
-    );
+  ): number {
+    const result = this._getFunction(3, {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbc), toPointer(bhid), toPointer(riid), toPointer(ppv));
+    return result;
   }
 
   GetParent(
     ppsi: PointerConvertible<IShellItem>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        4,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppsi)),
-    );
+  ): number {
+    const result = this._getFunction(4, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppsi));
+    return result;
   }
 
   GetDisplayName(
-    sigdnName: SIGDN,
-    ppszName: PointerConvertible<PWSTR>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        5,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(sigdnName), toPointer(ppszName)),
-    );
+    sigdnName: number /* SIGDN */,
+    ppszName: PointerConvertible<PWSTRConvertible>,
+  ): number {
+    const result = this._getFunction(5, {
+      parameters: ["pointer", "i16", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, sigdnName, toPointer(ppszName));
+    return result;
   }
 
   GetAttributes(
     sfgaoMask: number,
     psfgaoAttribs: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        6,
-        {
-          parameters: ["pointer", "u32", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, sfgaoMask, toPointer(psfgaoAttribs)),
-    );
+  ): number {
+    const result = this._getFunction(6, {
+      parameters: ["pointer", "u32", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, sfgaoMask, toPointer(psfgaoAttribs));
+    return result;
   }
 
   Compare(
     psi: IShellItem,
     hint: number,
     piOrder: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        7,
-        {
-          parameters: ["pointer", "pointer", "u32", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi), hint, toPointer(piOrder)),
-    );
+  ): number {
+    const result = this._getFunction(7, {
+      parameters: ["pointer", "pointer", "u32", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi), hint, toPointer(piOrder));
+    return result;
   }
 }

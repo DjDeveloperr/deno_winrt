@@ -1,14 +1,11 @@
 import { GUID } from "../../../../../guid.ts";
 import { IUnknown } from "../../../../Windows/Win32/System/Com/IUnknown.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
+import { PointerConvertible } from "../../../../../com.ts";
 import { BIND_OPTS } from "../../../../Windows/Win32/System/Com/BIND_OPTS.ts";
 import { IRunningObjectTable } from "../../../../Windows/Win32/System/Com/IRunningObjectTable.ts";
-import { PWSTR } from "../../../../Windows/Win32/Foundation/PWSTR.ts";
+import { PWSTRConvertible } from "../../../../../com.ts";
+import { toPWSTR } from "../../../../../com.ts";
 import { IEnumString } from "../../../../Windows/Win32/System/Com/IEnumString.ts";
 
 export class IBindCtx extends IUnknown {
@@ -20,141 +17,101 @@ export class IBindCtx extends IUnknown {
 
   RegisterObjectBound(
     punk: IUnknown,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        3,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(punk)),
-    );
+  ): number {
+    const result = this._getFunction(3, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(punk));
+    return result;
   }
 
   RevokeObjectBound(
     punk: IUnknown,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        4,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(punk)),
-    );
+  ): number {
+    const result = this._getFunction(4, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(punk));
+    return result;
   }
 
-  ReleaseBoundObjects(): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        5,
-        {
-          parameters: ["pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr),
-    );
+  ReleaseBoundObjects(): number {
+    const result = this._getFunction(5, {
+      parameters: ["pointer", ],
+      result: "i32",
+    } as const)(this._ptr, );
+    return result;
   }
 
   SetBindOptions(
     pbindopts: PointerConvertible<BIND_OPTS>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        6,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pbindopts)),
-    );
+  ): number {
+    const result = this._getFunction(6, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbindopts));
+    return result;
   }
 
   GetBindOptions(
     pbindopts: PointerConvertible<BIND_OPTS>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        7,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pbindopts)),
-    );
+  ): number {
+    const result = this._getFunction(7, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pbindopts));
+    return result;
   }
 
   GetRunningObjectTable(
     pprot: PointerConvertible<IRunningObjectTable>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        8,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pprot)),
-    );
+  ): number {
+    const result = this._getFunction(8, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(pprot));
+    return result;
   }
 
   RegisterObjectParam(
-    pszKey: PWSTR,
+    pszKey: PWSTRConvertible,
     punk: IUnknown,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        9,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszKey), toPointer(punk)),
-    );
+  ): number {
+    const result = this._getFunction(9, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszKey), toPointer(punk));
+    return result;
   }
 
   GetObjectParam(
-    pszKey: PWSTR,
+    pszKey: PWSTRConvertible,
     ppunk: PointerConvertible<IUnknown>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        10,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszKey), toPointer(ppunk)),
-    );
+  ): number {
+    const result = this._getFunction(10, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszKey), toPointer(ppunk));
+    return result;
   }
 
   EnumObjectParam(
     ppenum: PointerConvertible<IEnumString>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        11,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(ppenum)),
-    );
+  ): number {
+    const result = this._getFunction(11, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(ppenum));
+    return result;
   }
 
   RevokeObjectParam(
-    pszKey: PWSTR,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        12,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(pszKey)),
-    );
+    pszKey: PWSTRConvertible,
+  ): number {
+    const result = this._getFunction(12, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPWSTR(pszKey));
+    return result;
   }
 }

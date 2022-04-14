@@ -1,26 +1,12 @@
-import { GUID } from "../../../../../guid.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
-
-export class SIGDN extends COMObject {
-  static GUID = GUID.fromString("{00000000-0000-0000-0000-000000000000}");
-
-  [Symbol.for("COMObject.name")]() {
-    return "Windows.Win32.UI.Shell.SIGDN";
-  }
-
-  // value__: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_NORMALDISPLAY: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_PARENTRELATIVEPARSING: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_DESKTOPABSOLUTEPARSING: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_PARENTRELATIVEEDITING: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_DESKTOPABSOLUTEEDITING: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_FILESYSPATH: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_URL: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_PARENTRELATIVEFORADDRESSBAR: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_PARENTRELATIVE: Windows.Win32.UI.Shell.SIGDN;
-  // SIGDN_PARENTRELATIVEFORUI: Windows.Win32.UI.Shell.SIGDN;
+export class SIGDN {
+  static SIGDN_NORMALDISPLAY: number = 0;
+  static SIGDN_PARENTRELATIVEPARSING: number = -32767;
+  static SIGDN_DESKTOPABSOLUTEPARSING: number = -32768;
+  static SIGDN_PARENTRELATIVEEDITING: number = 4097;
+  static SIGDN_DESKTOPABSOLUTEEDITING: number = -16384;
+  static SIGDN_FILESYSPATH: number = -32768;
+  static SIGDN_URL: number = -32768;
+  static SIGDN_PARENTRELATIVEFORADDRESSBAR: number = -16383;
+  static SIGDN_PARENTRELATIVE: number = 1;
+  static SIGDN_PARENTRELATIVEFORUI: number = 16385;
 }

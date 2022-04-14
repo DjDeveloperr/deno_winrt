@@ -1,12 +1,8 @@
 import { GUID } from "../../../../../guid.ts";
 import { IUnknown } from "../../../../Windows/Win32/System/Com/IUnknown.ts";
 import { IShellItem } from "../../../../Windows/Win32/UI/Shell/IShellItem.ts";
-import { HRESULT } from "../../../../Windows/Win32/Foundation/HRESULT.ts";
-import {
-  COMObject,
-  PointerConvertible,
-  toPointer,
-} from "../../../../../com.ts";
+import { toPointer } from "../../../../../com.ts";
+import { PointerConvertible } from "../../../../../com.ts";
 
 export class IShellItemFilter extends IUnknown {
   static GUID = GUID.fromString("{2659B475-EEB8-48B7-8F07-B378810F48CF}");
@@ -17,30 +13,22 @@ export class IShellItemFilter extends IUnknown {
 
   IncludeItem(
     psi: IShellItem,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        3,
-        {
-          parameters: ["pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi)),
-    );
+  ): number {
+    const result = this._getFunction(3, {
+      parameters: ["pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi));
+    return result;
   }
 
   GetEnumFlagsForItem(
     psi: IShellItem,
     pgrfFlags: PointerConvertible<number>,
-  ): HRESULT {
-    return new HRESULT(
-      this._getFunction(
-        4,
-        {
-          parameters: ["pointer", "pointer", "pointer"],
-          result: "pointer",
-        } as const,
-      )(this._ptr, toPointer(psi), toPointer(pgrfFlags)),
-    );
+  ): number {
+    const result = this._getFunction(4, {
+      parameters: ["pointer", "pointer", "pointer"],
+      result: "i32",
+    } as const)(this._ptr, toPointer(psi), toPointer(pgrfFlags));
+    return result;
   }
 }

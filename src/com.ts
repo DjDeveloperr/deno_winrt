@@ -160,3 +160,47 @@ export function toPointer(
     );
   }
 }
+
+export type PWSTRConvertible = string | Uint16Array | null;
+export class PWSTR extends String {
+  constructor(ptr: Deno.UnsafePointer) {
+    let str = "";
+    const view = new Deno.UnsafePointerView(ptr);
+    for (let i = 0;; i++) {
+      const c = view.getUint16(i * 2);
+      if (c === 0) {
+        break;
+      }
+      str += String.fromCharCode(c);
+    }
+    super(str);
+  }
+}
+
+export function toPWSTR(
+  v: PWSTRConvertible,
+): Deno.UnsafePointer | null | TypedArray {
+  if (v === null || v === undefined) return null;
+  if (typeof v === "string") {
+    return encodeUTF16(v + "\0")[0];
+  } else return v;
+}
+
+export type PSTRConvertible = string | Uint8Array | null;
+export class PSTR extends String {
+  constructor(ptr: Deno.UnsafePointer) {
+    if (ptr.value === 0n) throw new Error("PSTR is null");
+    super(new Deno.UnsafePointerView(ptr).getCString);
+  }
+}
+
+export function toPSTR(
+  v: PSTRConvertible,
+): Deno.UnsafePointer | null | TypedArray {
+  if (typeof v === "string") {
+    return new TextEncoder().encode(v + "\0");
+  } else if (typeof v === "object") {
+    if (v !== null && v instanceof Uint8Array) return v;
+  }
+  return null;
+}

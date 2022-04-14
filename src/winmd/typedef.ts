@@ -2,6 +2,7 @@ import { GUID } from "../guid.ts";
 import { Field } from "./field.ts";
 import { Method } from "./method.ts";
 import { Scope } from "./scope.ts";
+import { TypeId } from "./typeid.ts";
 
 export class TypeDef {
   #initialized = false;
@@ -336,6 +337,11 @@ export class TypeDef {
       )[0];
     return (this.#cachedVtableAddr = iface.baseVtableAddr +
       iface.methods.length);
+  }
+
+  get enumBaseType(): TypeId | undefined {
+    if (!this.isEnum) return undefined;
+    else return this.fields.find((e) => e.name === "value__")!.type;
   }
 
   [Symbol.for("Deno.customInspect")]() {

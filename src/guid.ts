@@ -1,6 +1,11 @@
 import { clsidFromString, stringFromGUID } from "./com.ts";
 
-export type GUIDConvertible = GUID | Uint8Array | bigint | string;
+export type GUIDConvertible =
+  | GUID
+  | Uint8Array
+  | bigint
+  | string
+  | Deno.UnsafePointer;
 
 export class GUID {
   data: Uint8Array;
@@ -14,6 +19,11 @@ export class GUID {
       this.data = GUID.fromBigInt(value).data;
     } else if (typeof value === "string") {
       this.data = GUID.fromString(value).data;
+    } else if (value instanceof Deno.UnsafePointer) {
+      if (value.value === 0n) throw new Error("Invalid GUID pointer");
+      const view = new Deno.UnsafePointerView(value);
+      this.data = new Uint8Array(16);
+      view.copyInto(this.data);
     } else {
       throw new Error("Invalid value");
     }
