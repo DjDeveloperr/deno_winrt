@@ -28,13 +28,23 @@ export const winrt = Deno.dlopen(
   } as const,
 ).symbols;
 
+const wintypes = Deno.dlopen(
+  "WinTypes.dll",
+  {
+    RoGetMetaDataFile: {
+      parameters: ["pointer", "pointer", "pointer", "pointer", "pointer"],
+      result: "isize",
+    },
+  } as const,
+).symbols;
+
 export function getClass(name: string) {
   const cls = new BigUint64Array(1);
   unwrap(winrt.RoActivateInstance(
     HSTRING.fromString(name).handle,
     cls,
   ));
-  return new IInspectable(new Deno.UnsafePointer(cls[0]));
+  return new IInspectable(cls[0]);
 }
 
 export function getActivationFactory<I extends typeof IUnknown>(
@@ -47,7 +57,28 @@ export function getActivationFactory<I extends typeof IUnknown>(
     iid.GUID.data,
     factory,
   ));
-  return new iid(new Deno.UnsafePointer(factory[0])) as InstanceType<I>;
+  return new iid(factory[0]) as InstanceType<I>;
+}
+
+export function getMetaDataFile(
+  name: string,
+  dispenser: bigint | null,
+) {
+  const path = new BigUint64Array(1);
+  const imp = new BigUint64Array(1);
+  const token = new BigUint64Array(1);
+  unwrap(wintypes.RoGetMetaDataFile(
+    HSTRING.fromString(name).handle,
+    dispenser,
+    path,
+    imp,
+    token,
+  ));
+  return {
+    path: new HSTRING(path[0]).getString(),
+    scope: imp[0],
+    token: token[0],
+  };
 }
 
 winrt.RoInitialize(0);

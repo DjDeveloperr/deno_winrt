@@ -3,12 +3,14 @@ import { Field } from "./field.ts";
 import { Method } from "./method.ts";
 import { Scope } from "./scope.ts";
 import { TypeId } from "./typeid.ts";
+import { TypeTuple } from "./typetuple.ts";
 
 export class TypeDef {
   #initialized = false;
   #name = "";
   #flags = 0;
   #parent?: TypeDef;
+  typeSpec?: TypeId;
 
   constructor(public scope: Scope, public token: number) {}
 
@@ -158,7 +160,25 @@ export class TypeDef {
         }
 
         case 0x1b000000: {
-          throw new Error("typespec unimplemented");
+          const ppvSig = new BigUint64Array(1);
+          const pcbSig = new Uint32Array(1);
+
+          const hr = this.scope.com.GetTypeSpecFromToken(
+            this.token,
+            ppvSig,
+            pcbSig,
+          );
+
+          if (hr === 0) {
+            const sig = new Uint8Array(pcbSig[0]);
+            new Deno.UnsafePointerView(ppvSig[0])
+              .copyInto(sig);
+            const tup = new TypeTuple(this.scope, sig).type;
+            this.#name = tup.name ?? tup.base;
+            this.typeSpec = tup;
+          }
+
+          break;
         }
       }
 
@@ -179,7 +199,7 @@ export class TypeDef {
 
     if (hr === 0) {
       if (pcbData[0] > 0) {
-        const blob = new Deno.UnsafePointer(ppData[0]);
+        const blob = ppData[0];
         const guid = new Uint8Array(16);
         const view = new Deno.UnsafePointerView(blob);
         view.copyInto(guid, 2);
@@ -232,7 +252,7 @@ export class TypeDef {
         );
       }
 
-      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+      this.scope.com.CloseEnum(phEnum[0]);
     }
     return this.#fields;
   }
@@ -266,7 +286,7 @@ export class TypeDef {
         );
       }
 
-      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+      this.scope.com.CloseEnum(phEnum[0]);
     }
 
     return this.#methods;
@@ -319,7 +339,7 @@ export class TypeDef {
         );
       }
 
-      this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+      this.scope.com.CloseEnum(phEnum[0]);
 
       this.#interfacesInit = true;
     }

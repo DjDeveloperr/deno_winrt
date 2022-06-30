@@ -5,7 +5,7 @@ import { IUnknown } from "./IUnknown.ts";
 export class IMetaDataImport extends IUnknown {
   static GUID = GUID.fromString("{7DAC8207-D3AE-4C75-9B67-92801A497D44}");
 
-  CloseEnum(e: Deno.UnsafePointer): number {
+  CloseEnum(e: bigint): number {
     const fn = this._getFunction(
       3,
       {
@@ -13,10 +13,10 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, e);
+    return Number(fn(this._ptr, e));
   }
 
-  CountEnum(e: Deno.UnsafePointer): number {
+  CountEnum(e: bigint): number {
     const fn = this._getFunction(
       4,
       {
@@ -29,7 +29,7 @@ export class IMetaDataImport extends IUnknown {
     return out[0];
   }
 
-  ResetEnum(e: Deno.UnsafePointer, pos: number) {
+  ResetEnum(e: bigint, pos: number) {
     const fn = this._getFunction(
       5,
       {
@@ -53,7 +53,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, phEnum, rgTypeDefs, cMax, pcTypeDefs);
+    return Number(fn(this._ptr, phEnum, rgTypeDefs, cMax, pcTypeDefs));
   }
 
   EnumInterfaceImpls(
@@ -77,7 +77,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, phEnum, td, rImpls, cMax, pcImpls);
+    return Number(fn(this._ptr, phEnum, td, rImpls, cMax, pcImpls));
   }
 
   FindTypeDefByName(
@@ -92,12 +92,12 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       encodeUTF16(szTypeDef + "\0")[0],
       tkEnclosingClass,
       mdTypeDef,
-    );
+    ));
   }
 
   GetModuleFromScope(ptkModule: Uint32Array): number {
@@ -108,7 +108,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, ptkModule);
+    return Number(fn(this._ptr, ptkModule));
   }
 
   GetInterfaceImplProps(
@@ -123,7 +123,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, tkInterfaceImpl, ptkClass, ptkIface);
+    return Number(fn(this._ptr, tkInterfaceImpl, ptkClass, ptkIface));
   }
 
   GetTypeRefProps(
@@ -147,14 +147,14 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       tkTypeRef,
       ptkResolutionScope,
       szName,
       cchName,
       pchName,
-    );
+    ));
   }
 
   GetTypeDefProps(
@@ -180,7 +180,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       td,
       szTypeDef,
@@ -188,7 +188,7 @@ export class IMetaDataImport extends IUnknown {
       pchTypeDef,
       pdwTypeDefFlags,
       ptkExtends,
-    );
+    ));
   }
 
   EnumMethods(
@@ -212,7 +212,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, phEnum, tkTypeDef, rgMethod, cMax, pcTokens);
+    return Number(fn(this._ptr, phEnum, tkTypeDef, rgMethod, cMax, pcTokens));
   }
 
   EnumFields(
@@ -236,7 +236,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, phEnum, tkTypeDef, rgFields, cMax, pcTokens);
+    return Number(fn(this._ptr, phEnum, tkTypeDef, rgFields, cMax, pcTokens));
   }
 
   EnumParams(
@@ -260,7 +260,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, phEnum, tkMethodDef, rParams, cMax, pcTokens);
+    return Number(fn(this._ptr, phEnum, tkMethodDef, rParams, cMax, pcTokens));
   }
 
   GetMethodProps(
@@ -294,7 +294,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       tkMethodDef,
       ptkClass,
@@ -306,7 +306,22 @@ export class IMetaDataImport extends IUnknown {
       pcbSigBlob,
       pulCodeRVA,
       pdvImplFlags,
+    ));
+  }
+
+  GetTypeSpecFromToken(
+    tkTypeSpec: number,
+    ppvSig: BigUint64Array,
+    pcbSig: Uint32Array,
+  ): number {
+    const fn = this._getFunction(
+      44,
+      {
+        parameters: ["pointer", "u32", "pointer", "pointer"],
+        result: "isize",
+      } as const,
     );
+    return Number(fn(this._ptr, tkTypeSpec, ppvSig, pcbSig));
   }
 
   GetFieldProps(
@@ -342,7 +357,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       tkFieldDef,
       ptkTypeDef,
@@ -355,7 +370,7 @@ export class IMetaDataImport extends IUnknown {
       pdwCPlusTypeFlag,
       ppValue,
       pcchValue,
-    );
+    ));
   }
 
   GetParamProps(
@@ -389,7 +404,7 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(
+    return Number(fn(
       this._ptr,
       tkParamDef,
       ptkMethodDef,
@@ -401,7 +416,7 @@ export class IMetaDataImport extends IUnknown {
       pdwCPlusTypeFlag,
       ppValue,
       pcchValue,
-    );
+    ));
   }
 
   GetCustomAttributeByName(
@@ -417,7 +432,9 @@ export class IMetaDataImport extends IUnknown {
         result: "isize",
       } as const,
     );
-    return fn(this._ptr, tkObj, encodeUTF16(szName + "\0")[0], ppData, pcbData);
+    return Number(
+      fn(this._ptr, tkObj, encodeUTF16(szName + "\0")[0], ppData, pcbData),
+    );
   }
 
   [Symbol.for("COMObject.name")]() {

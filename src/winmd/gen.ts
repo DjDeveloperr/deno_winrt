@@ -1,6 +1,10 @@
 import { GUID } from "../guid.ts";
 import * as winmd from "./mod.ts";
 
+function getShortName(name: string) {
+  return name.split(".").at(-1)!.split("`")[0];
+}
+
 type SpecialType = [
   string,
   Deno.NativeType,
@@ -42,6 +46,9 @@ const SPECIAL_TYPES: Record<
   "Windows.Win32.Foundation.HRESULT": ["number", "i32", (v, _imports) => {
     return v;
   }, false],
+  "Windows.Foundation.HResult": ["number", "i32", (v, _imports) => {
+    return v;
+  }, false],
   "System.Guid": ["GUID", "pointer", (v, imports) => {
     imports.add("GUID");
     return `new GUID(${v})`;
@@ -66,7 +73,7 @@ const SPECIAL_TYPES: Record<
     return `${v} !== 0`;
   }, false],
   "Windows.Win32.Foundation.FILETIME": [
-    "Deno.UnsafePointer",
+    "bigint",
     "pointer",
     (v, _imports) => {
       return v;
@@ -74,7 +81,7 @@ const SPECIAL_TYPES: Record<
     false,
   ],
   "Windows.Win32.Foundation.HWND": [
-    "Deno.UnsafePointer",
+    "bigint",
     "pointer",
     (v, _imports) => {
       return v;
@@ -82,6 +89,14 @@ const SPECIAL_TYPES: Record<
     false,
   ],
 };
+
+function jsify(name: string) {
+  if (name === "var") {
+    return `pVar`;
+  } else if (name === "arguments") {
+    return `pArguments`;
+  } else return name;
+}
 
 function typeToFFI(ty: winmd.TypeId): Deno.NativeType {
   if (ty.type?.name) {
@@ -109,7 +124,7 @@ function typeToFFI(ty: winmd.TypeId): Deno.NativeType {
     case "usize":
     case "isize":
     case "void":
-      return ty.base;
+      return ty.base as Deno.NativeType;
 
     case "char":
     case "bool":
@@ -122,6 +137,8 @@ function typeToFFI(ty: winmd.TypeId): Deno.NativeType {
     case "class":
     case "object":
     case "string":
+    case "genericinst":
+    case "szarray":
       return "pointer";
 
     default:
@@ -186,27 +203,36 @@ export class Emitter {
           this.emitTypeDef(typeId.type);
         }
         return this.processTypeId(typeId.type.enumBaseType, imports) +
-          ` /* ${typeId.type.name.split(".").pop()!} */`;
+          ` /* ${getShortName(typeId.type.name)} */`;
       }
       imports.add(typeId.type.name);
       if (!this.#emitted.has(typeId.type.name)) {
         this.emitTypeDef(typeId.type);
       }
-      return typeId.type.name.split(".").pop()!;
+      return getShortName(typeId.type.name);
     }
     if (typeId.typeArg) generic = this.processTypeId(typeId.typeArg, imports);
     return type;
   }
 
   emitMethod(addr: number, method: winmd.Method, imports: Set<string>) {
-    let source = `  ${method.name}${
+    let source = `  ${
+      method.name === ".ctor"
+        ? "ctor"
+        : method.name.replace("get_", "get").replace("put_", "set").replace(
+          / +/g,
+          "_",
+        )
+    }${
       method.parameters.length === 0
         ? "()"
         : `(\n${
           method.parameters.map((param) => {
             const ty = this.processTypeId(param.type, imports);
             if (ty instanceof Array && ty[3]) imports.add(ty[0]);
-            return `    ${param.name}: ${ty instanceof Array ? ty[0] : ty}${
+            return `    ${jsify(param.name)}: ${
+              ty instanceof Array ? ty[0] : ty
+            }${
               param.isOptional && typeToFFI(param.type) === "pointer"
                 ? " | null"
                 : ""
@@ -238,20 +264,20 @@ export class Emitter {
       method.parameters.map((e) => {
         if (e.type.type?.name === "Windows.Win32.Foundation.PWSTR") {
           imports.add("toPWSTR");
-          return `toPWSTR(${e.name})`;
+          return `toPWSTR(${jsify(e.name)})`;
         }
         if (
           e.type.type?.name === "Windows.Win32.Foundation.PSTR" ||
           e.type.type?.name === "Windows.Win32.Foundation.BSTR"
         ) {
           imports.add("toPSTR");
-          return `toPSTR(${e.name})`;
+          return `toPSTR(${jsify(e.name)})`;
         }
         const ffi = typeToFFI(e.type);
         if (ffi === "pointer") {
           imports.add("toPointer");
-          return `toPointer(${e.name})`;
-        } else return e.name;
+          return `toPointer(${jsify(e.name)})`;
+        } else return jsify(e.name);
       }).join(", ")
     });\n`;
     if (wrapComObject) {
@@ -272,10 +298,12 @@ export class Emitter {
       return;
     }
 
-    this.#emitted.add(def.name);
-
     const nameParts = def.name.split(".");
-    const name = nameParts.pop()!;
+    if (nameParts.at(-2)?.includes("`")) nameParts.pop()!;
+
+    this.#emitted.add(nameParts.join("."));
+
+    const name = nameParts.at(-1)!;
 
     const imports = new Set<string>();
     if (!def.isEnum) imports.add("GUID");
@@ -291,11 +319,13 @@ export class Emitter {
       });
     }
 
-    let source = def.isEnum
+    let source = "";
+
+    source += def.isEnum
       ? `export class ${name} {`
       : `export class ${name}${
         def.interfaces.length
-          ? ` extends ${def.interfaces[0].name.split(".").pop()}`
+          ? ` extends ${getShortName(def.interfaces[0].name)}`
           : " extends COMObject"
       } {\n`;
 
@@ -309,7 +339,7 @@ export class Emitter {
       source += `  }\n`;
 
       const iface = this.scope.typeDefs.find((e) =>
-        e.name.split(".").pop() === "I" + name
+        getShortName(e.name) === "I" + name
       );
       if (iface) {
         imports.add("createInstance");
@@ -333,7 +363,7 @@ export class Emitter {
         e.name !== "value__"
       ).map((field, i) => {
         let k: number | bigint = i;
-        if (field.pValue.value !== 0n) {
+        if (field.pValue !== 0n) {
           const view = new Deno.UnsafePointerView(field.pValue);
           switch (base.base) {
             case "u8":
@@ -394,73 +424,74 @@ export class Emitter {
         [...imports].filter((e) => e !== def.name).map((e) => {
           if (e === "COMObject") {
             return `import { COMObject } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "createInstance") {
             return `import { createInstance } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "toPointer") {
             return `import { toPointer } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "PointerConvertible") {
             return `import { PointerConvertible } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "GUID") {
             return `import { GUID } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }guid.ts";`;
           }
           if (e === "PWSTR") {
             return `import { PWSTR } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "PSTR") {
             return `import { PSTR } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "PWSTRConvertible") {
             return `import { PWSTRConvertible } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "PSTRConvertible") {
             return `import { PSTRConvertible } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "toPWSTR") {
             return `import { toPWSTR } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
           if (e === "toPSTR") {
             return `import { toPSTR } from "${
-              "../".repeat(nameParts.length + 1)
+              "../".repeat(nameParts.length)
             }com.ts";`;
           }
-          const parts = e.split(".");
+          const parts = e.split(".").map((e) => e.split("`")[0]);
           const name = parts.pop()!;
-          return `import { ${name} } from "${"../".repeat(nameParts.length)}${
-            parts.join("/")
-          }/${name}.ts";`;
+          return `import { ${name} } from "${
+            "../".repeat(nameParts.length - 1)
+          }${parts.join("/")}/${name}.ts";`;
         }).join("\n")
       }\n\n${source}`;
 
-    this.write(def.name, source);
+    this.write(def.name, `/// Autogenerated: ${def.name}\n\n` + source);
   }
 
   emit(filter: (def: winmd.TypeDef) => boolean = () => true) {
     for (const def of this.scope.typeDefs) {
       if (filter(def)) {
+        console.log("MAIN", def.name);
         this.emitTypeDef(def);
         if (def.isInterface) {
           const parts = def.name.split(".");
@@ -481,7 +512,11 @@ await Deno.remove(new URL("../gen", import.meta.url), { recursive: true });
 await Deno.mkdir(new URL("../gen", import.meta.url));
 
 const dispenser = new winmd.MetaDataDispenser();
-const scope = dispenser.openScope("Windows.Win32.winmd");
+
+const scope = dispenser.openScope(
+  // "C:\\WINDOWS\\system32\\WinMetadata\\Windows.UI.Xaml.winmd",
+  "Windows.Win32.winmd",
+);
 const emitter = new Emitter(scope, (name, src) => {
   console.log("Emit", name);
 
@@ -497,7 +532,15 @@ const emitter = new Emitter(scope, (name, src) => {
   );
 });
 
-emitter.emit((def) => def.name === "Windows.Win32.UI.Shell.IFileOpenDialog");
+emitter.emit((def) =>
+  def.name.startsWith("Windows.Win32.UI.Shell.IFileOpenDialog") ||
+  def.name.startsWith("Windows.Win32.UI.Input")
+);
+
+Deno.writeTextFileSync(
+  "names.txt",
+  scope.typeDefs.map((e) => e.name).join("\n"),
+);
 
 function makeReExports(path: URL): void {
   const exports = [];

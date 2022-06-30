@@ -1,5 +1,5 @@
-export function unwrap(result: number) {
-  if (result !== 0) {
+export function unwrap(result: number | bigint) {
+  if (Number(result) !== 0) {
     throw new Error(`WinAPI call failed: 0x${result.toString(16)}`);
   }
 }
@@ -10,16 +10,16 @@ export function encodeUTF16(str: string): [Uint16Array, number] {
   return [buffer, buffer.length];
 }
 
-export class Pointer<T extends new (ptr: Deno.UnsafePointer) => InstanceType<T>>
+export class Pointer<T extends new (ptr: bigint) => InstanceType<T>>
   extends BigUint64Array {
   ty: T;
 
-  constructor(ptr: Deno.UnsafePointer);
+  constructor(ptr: bigint);
   constructor(ty: T);
-  constructor(ty: T | Deno.UnsafePointer) {
+  constructor(ty: T | bigint) {
     super(1);
-    if (ty instanceof Deno.UnsafePointer) {
-      this[0] = ty.value;
+    if (typeof ty === "bigint") {
+      this[0] = ty;
       this.ty = Pointer as unknown as T;
     } else {
       this.ty = ty;
@@ -27,7 +27,7 @@ export class Pointer<T extends new (ptr: Deno.UnsafePointer) => InstanceType<T>>
   }
 
   get pointer() {
-    return new Deno.UnsafePointer(this[0]);
+    return this[0];
   }
 
   get value(): InstanceType<T> | null {

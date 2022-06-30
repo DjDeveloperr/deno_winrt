@@ -15,7 +15,7 @@ export class IUnknown extends COMObject {
     );
     const out = new BigUint64Array(1);
     unwrap(fn(this._ptr, type.GUID.data, out));
-    return new type(new Deno.UnsafePointer(out[0])) as InstanceType<T>;
+    return new type(out[0]) as InstanceType<T>;
   }
 
   AddRef(): number {
@@ -26,7 +26,7 @@ export class IUnknown extends COMObject {
         result: "u64",
       } as const,
     );
-    return fn(this._ptr);
+    return Number(fn(this._ptr));
   }
 
   Release(): void {

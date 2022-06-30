@@ -1,4 +1,3 @@
-import type { IUnknown } from "./com/IUnknown.ts";
 import { GUID, GUIDConvertible } from "./guid.ts";
 import { encodeUTF16, unwrap } from "./util.ts";
 
@@ -35,19 +34,19 @@ export const ole32 = Deno.dlopen(
 ole32.CoInitializeEx(null, 0x02 | 0x04);
 
 export class COMObject {
-  _ptr: Deno.UnsafePointer;
+  _ptr: bigint;
   #vtable?: Deno.UnsafePointerView;
 
   protected get _vtable() {
     if (!this.#vtable) {
       const view = new Deno.UnsafePointerView(this._ptr);
-      const vtable = new Deno.UnsafePointer(view.getBigUint64(0));
+      const vtable = view.getBigUint64(0);
       this.#vtable = new Deno.UnsafePointerView(vtable);
     }
     return this.#vtable;
   }
 
-  constructor(ptr: Deno.UnsafePointer) {
+  constructor(ptr: bigint) {
     this._ptr = ptr;
   }
 
@@ -55,18 +54,18 @@ export class COMObject {
     offset: number,
     def: Fn,
   ): Deno.UnsafeFnPointer<Fn>["call"] {
-    const ptr = new Deno.UnsafePointer(this._vtable.getBigUint64(offset * 8));
+    const ptr = this._vtable.getBigUint64(offset * 8);
     const fnptr = new Deno.UnsafeFnPointer(ptr, def);
     return (...args: any) => fnptr.call(...args);
   }
 
   [Symbol.for("Deno.customInspect")]() {
     const name = (this as any)[Symbol.for("COMObject.name")]?.();
-    if (!this._ptr || this._ptr.value === 0n) {
+    if (!this._ptr || this._ptr === 0n) {
       return `COMObject${name ? `<${name}>` : ""}(nullptr)`;
     }
     return `COMObject${name ? `<${name}>` : ""}(0x${
-      this._ptr.value.toString(16).padStart(8, "0")
+      this._ptr.toString(16).padStart(8, "0")
     })`;
   }
 }
@@ -79,7 +78,7 @@ export function clsidFromString(
     encodeUTF16(clsid + "\0")[0],
     ptr,
   );
-  if (hr !== 0) {
+  if (hr !== 0n) {
     throw new Error(`CLSIDFromString failed with 0x${hr.toString(16)}`);
   }
   return ptr;
@@ -93,16 +92,16 @@ export function stringFromGUID(
     guid,
     ptr,
   );
-  if (hr !== 0) {
+  if (hr !== 0n) {
     throw new Error(`StringFromIID failed with 0x${hr.toString(16)}`);
   }
   const str = new Uint16Array(38);
-  new Deno.UnsafePointerView(new Deno.UnsafePointer(ptr[0])).copyInto(str);
+  new Deno.UnsafePointerView(ptr[0]).copyInto(str);
   return String.fromCharCode(...str);
 }
 
 export function createInstance<
-  I extends { GUID: GUID } & (new (ptr: Deno.UnsafePointer) => InstanceType<I>),
+  I extends { GUID: GUID } & (new (ptr: bigint) => InstanceType<I>),
 >(
   clsid: GUIDConvertible,
   iid: I,
@@ -115,7 +114,7 @@ export function createInstance<
     iid.GUID.data,
     out,
   ));
-  return new iid(new Deno.UnsafePointer(out[0])) as InstanceType<I>;
+  return new iid(out[0]) as InstanceType<I>;
 }
 
 export type TypedArray =
@@ -132,7 +131,7 @@ export type TypedArray =
   | Uint8ClampedArray;
 
 export type PointerConvertible<_PLACEHOLDER = unknown> =
-  | Deno.UnsafePointer
+  | bigint
   | null
   | TypedArray
   | COMObject
@@ -142,16 +141,16 @@ export type PointerConvertible<_PLACEHOLDER = unknown> =
 
 export function toPointer(
   v: PointerConvertible,
-): Deno.UnsafePointer | null | TypedArray {
+): bigint | null | TypedArray {
   if (
-    v === null || v === undefined || v instanceof Deno.UnsafePointer ||
+    v === null || v === undefined || typeof v === "bigint" ||
     (typeof v === "object" && "buffer" in v && v.buffer instanceof ArrayBuffer)
   ) {
     return v === undefined ? null : v;
   } else if (v instanceof COMObject) {
     return v._ptr;
   } else if (typeof v === "bigint") {
-    return new Deno.UnsafePointer(v);
+    return v;
   } else if (v instanceof Deno.UnsafeFnPointer) {
     return v.pointer;
   } else {
@@ -163,7 +162,7 @@ export function toPointer(
 
 export type PWSTRConvertible = string | Uint16Array | null;
 export class PWSTR extends String {
-  constructor(ptr: Deno.UnsafePointer) {
+  constructor(ptr: bigint) {
     let str = "";
     const view = new Deno.UnsafePointerView(ptr);
     for (let i = 0;; i++) {
@@ -179,7 +178,7 @@ export class PWSTR extends String {
 
 export function toPWSTR(
   v: PWSTRConvertible,
-): Deno.UnsafePointer | null | TypedArray {
+): bigint | null | TypedArray {
   if (v === null || v === undefined) return null;
   if (typeof v === "string") {
     return encodeUTF16(v + "\0")[0];
@@ -188,15 +187,15 @@ export function toPWSTR(
 
 export type PSTRConvertible = string | Uint8Array | null;
 export class PSTR extends String {
-  constructor(ptr: Deno.UnsafePointer) {
-    if (ptr.value === 0n) throw new Error("PSTR is null");
+  constructor(ptr: bigint) {
+    if (ptr === 0n) throw new Error("PSTR is null");
     super(new Deno.UnsafePointerView(ptr).getCString);
   }
 }
 
 export function toPSTR(
   v: PSTRConvertible,
-): Deno.UnsafePointer | null | TypedArray {
+): bigint | null | TypedArray {
   if (typeof v === "string") {
     return new TextEncoder().encode(v + "\0");
   } else if (typeof v === "object") {

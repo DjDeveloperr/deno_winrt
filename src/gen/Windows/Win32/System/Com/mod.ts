@@ -1,5 +1,6 @@
 export * from "./BIND_OPTS.ts";
 export * from "./IBindCtx.ts";
+export * from "./IClassFactory.ts";
 export * from "./IEnumMoniker.ts";
 export * from "./IEnumString.ts";
 export * from "./IMoniker.ts";
@@ -9,6 +10,7 @@ export * from "./IRunningObjectTable.ts";
 export * from "./ISequentialStream.ts";
 export * from "./IStream.ts";
 export * from "./IUnknown.ts";
+export * from "./SAFEARRAY.ts";
 export * from "./STATSTG.ts";
 export * from "./STREAM_SEEK.ts";
 export * as StructuredStorage from "./StructuredStorage/mod.ts";

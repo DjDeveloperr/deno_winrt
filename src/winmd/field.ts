@@ -9,7 +9,7 @@ export class Field {
   #attr = 0;
   #sig!: Uint8Array;
   #cPlusTypeFlag = 0;
-  #pValue!: Deno.UnsafePointer;
+  #pValue!: bigint;
   #cchValue!: number;
 
   constructor(public scope: Scope, public token: number) {}
@@ -49,12 +49,12 @@ export class Field {
         this.#attr = pdwAttr[0];
         this.#cPlusTypeFlag = pdwCPlusTypeFlag[0];
         this.#sig = new Uint8Array(Number(pcbSigBlob[0]));
-        new Deno.UnsafePointerView(new Deno.UnsafePointer(ppvSigBlob[0]))
+        new Deno.UnsafePointerView(ppvSigBlob[0])
           .copyInto(
             this.#sig,
           );
         this.#type = new TypeDef(this.scope, ptkTypeDef[0]);
-        this.#pValue = new Deno.UnsafePointer(ppValue[0]);
+        this.#pValue = ppValue[0];
         this.#cchValue = pcchValue[0];
 
         this.#initialized = true;

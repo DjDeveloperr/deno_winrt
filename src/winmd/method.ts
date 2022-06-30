@@ -48,7 +48,7 @@ export class Method {
         );
         this.#attr = pdwAttr[0];
         this.#sigs = new Uint8Array(pcbSigBlob[0]);
-        new Deno.UnsafePointerView(new Deno.UnsafePointer(ppvSigBlob[0]))
+        new Deno.UnsafePointerView(ppvSigBlob[0])
           .copyInto(this.#sigs);
         this.#rva = pulCodeRVA[0];
         this.#implFlags = pdvImplFlags[0];
@@ -75,7 +75,7 @@ export class Method {
       hr = this.scope.com.EnumParams(phEnum, this.token, rParams, 1, pcTokens);
     }
 
-    this.scope.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+    this.scope.com.CloseEnum(phEnum[0]);
   }
 
   #parseSigs() {
@@ -88,8 +88,16 @@ export class Method {
 
   #parsePropertySig() {
     if (this.isGetter) {
-    } else if (this.isSetter) {}
-    throw new Error("unimplemented");
+      const returnTypeTup = new TypeTuple(
+        this.scope,
+        this.sigs.subarray(2),
+      );
+      this.#returnType = new Parameter(this.scope, 0).initFromType(
+        returnTypeTup.type,
+      );
+    } else if (this.isSetter) {
+      this.#returnType = undefined;
+    }
   }
 
   #parseMethodSig() {

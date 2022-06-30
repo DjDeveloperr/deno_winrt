@@ -16,13 +16,13 @@ export const winstring = Deno.dlopen(
 ).symbols;
 
 export class HSTRING {
-  protected _handle: Deno.UnsafePointer;
+  protected _handle: bigint;
 
-  get handle(): Deno.UnsafePointer {
+  get handle(): bigint {
     return this._handle;
   }
 
-  constructor(handle: Deno.UnsafePointer) {
+  constructor(handle: bigint) {
     this._handle = handle;
   }
 
@@ -32,10 +32,10 @@ export class HSTRING {
       ...encodeUTF16(str),
       out,
     );
-    return new HSTRING(new Deno.UnsafePointer(out[0]));
+    return new HSTRING(out[0]);
   }
 
-  getRawBuffer(): [Deno.UnsafePointer, number] {
+  getRawBuffer(): [bigint, number] {
     const out = new Uint32Array(1);
     const ptr = winstring.WindowsGetStringRawBuffer(this._handle, out);
     return [ptr, out[0]];
@@ -45,6 +45,6 @@ export class HSTRING {
     const [ptr, len] = this.getRawBuffer();
     const buffer = new Uint16Array(len);
     new Deno.UnsafePointerView(ptr).copyInto(buffer);
-    return new TextDecoder().decode(buffer);
+    return String.fromCharCode(...buffer);
   }
 }

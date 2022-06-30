@@ -5,6 +5,15 @@ import {
   SIGDN,
 } from "./src/gen/Windows/Win32/UI/Shell/mod.ts";
 import { Pointer } from "./src/util.ts";
+import { getMetaDataFile } from "./src/winrt.ts";
+import * as winmd from "./src/winmd/mod.ts";
+import { IMetaDataImport2 } from "./src/com/IMetaDataImport2.ts";
+
+const dispenser = new winmd.MetaDataDispenser();
+const scope = dispenser.openScope(
+  "C:\\WINDOWS\\system32\\WinMetadata\\Windows.UI.Xaml.winmd",
+);
+console.log(scope.typeDefs);
 
 const pShellItem = new Pointer(IShellItem);
 const dialog = FileOpenDialog.create();

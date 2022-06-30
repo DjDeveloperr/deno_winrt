@@ -5,7 +5,7 @@ export type GUIDConvertible =
   | Uint8Array
   | bigint
   | string
-  | Deno.UnsafePointer;
+  | BigUint64Array;
 
 export class GUID {
   data: Uint8Array;
@@ -19,9 +19,9 @@ export class GUID {
       this.data = GUID.fromBigInt(value).data;
     } else if (typeof value === "string") {
       this.data = GUID.fromString(value).data;
-    } else if (value instanceof Deno.UnsafePointer) {
-      if (value.value === 0n) throw new Error("Invalid GUID pointer");
-      const view = new Deno.UnsafePointerView(value);
+    } else if (value instanceof BigUint64Array) {
+      if (value[0] === 0n) throw new Error("Invalid GUID pointer");
+      const view = new Deno.UnsafePointerView(value[0]);
       this.data = new Uint8Array(16);
       view.copyInto(this.data);
     } else {

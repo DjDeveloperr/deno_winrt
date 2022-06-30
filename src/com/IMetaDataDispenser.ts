@@ -52,7 +52,7 @@ export class IMetaDataDispenser extends IUnknown {
       out,
     );
     unwrap(hr);
-    const ptr = new Deno.UnsafePointer(out[0]);
+    const ptr = out[0];
     return new riid(ptr) as InstanceType<I>;
   }
 

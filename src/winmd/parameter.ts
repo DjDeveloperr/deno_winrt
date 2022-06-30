@@ -50,7 +50,7 @@ export class Parameter {
         this.#attr = pdwAttr[0];
         this.#cPlusTypeFlag = pdwCPlusTypeFlag[0];
         this.#sig = new Uint8Array(Number(pcchValue[0]));
-        new Deno.UnsafePointerView(new Deno.UnsafePointer(ppValue[0])).copyInto(
+        new Deno.UnsafePointerView(ppValue[0]).copyInto(
           this.#sig,
         );
         this.#type = TypeId.fromValue(this.#cPlusTypeFlag);

@@ -18,7 +18,7 @@ export class IInspectable extends IUnknown {
     const outLen = new BigUint64Array(1);
     const outPtr = new BigUint64Array(1);
     unwrap(fn(this._ptr, outLen, outPtr));
-    const view = new Deno.UnsafePointerView(new Deno.UnsafePointer(outPtr[0]));
+    const view = new Deno.UnsafePointerView(outPtr[0]);
     for (let i = 0n; i < outLen[0] * 2n; i += 2n) {
       const guid = new Uint8Array(16);
       view.copyInto(guid.subarray(0, 8), Number(i * 8n));
@@ -38,7 +38,7 @@ export class IInspectable extends IUnknown {
     );
     const out = new BigUint64Array(1);
     unwrap(fn(this._ptr, out));
-    const ptr = new Deno.UnsafePointer(out[0]);
+    const ptr = out[0];
     return new HSTRING(ptr).getString();
   }
 

@@ -39,7 +39,7 @@ export class Scope {
         );
       }
 
-      this.com.CloseEnum(new Deno.UnsafePointer(phEnum[0]));
+      this.com.CloseEnum(phEnum[0]);
     }
     return this.#typeDefs;
   }
