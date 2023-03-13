@@ -43,3 +43,20 @@ export function unwrap(result: number) {
     throw new HRESULT(result);
   }
 }
+
+export function* enumerator<T>(
+  fn: () => T,
+) {
+  try {
+    while (true) {
+      yield fn();
+    }
+  } catch (e) {
+    if (e instanceof HRESULT && e.code === 1) return;
+    throw e;
+  }
+}
+
+export function decodeOutString16(str: Uint16Array, len: Uint32Array) {
+  return decodeUTF16LE(new Uint8Array(str.buffer, 0, (len[0] - 1) * 2));
+}

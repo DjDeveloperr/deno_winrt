@@ -50,6 +50,10 @@ export class GUID extends Uint8Array {
     return str;
   }
 
+  toJSON() {
+    return this.toString();
+  }
+
   [Symbol.for("Deno.customInspect")]() {
     return "GUID(" + this.toString() + ")";
   }

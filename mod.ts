@@ -3,3 +3,4 @@ export * from "./src/winrt.ts";
 export * from "./src/guid.ts";
 export * from "./src/hstring.ts";
 export * from "./src/com/mod.ts";
+export * from "./src/winmd/mod.ts";

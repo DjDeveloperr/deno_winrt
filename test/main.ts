@@ -1,7 +1,6 @@
-import { IMetaDataDispenser, IMetaDataImport2 } from "../mod.ts";
+import { IMetaDataDispenser, IMetaDataImport2, processScope } from "../mod.ts";
 
 const dispenser = IMetaDataDispenser.create();
-
 console.log(dispenser);
 
 const scope = dispenser.OpenScope(
@@ -9,9 +8,10 @@ const scope = dispenser.OpenScope(
   0,
   IMetaDataImport2,
 );
-
 console.log(scope);
 
-scope.Release();
+const data = processScope(scope);
+console.log(data);
 
+scope.Release();
 dispenser.Release();
