@@ -1,0 +1,16 @@
+{
+  "version": "Windows.Wdk.winmd",
+  "guid": "{F007E5FA-4A7B-4952-9649-331B63F5D035}",
+  "typeDefs": [
+    {
+      "name": "Windows.Wdk.System.OfflineRegistry.ORHKEY",
+      "flags": 1048841,
+      "extends": 16777217
+    },
+    {
+      "name": "Windows.Wdk.System.OfflineRegistry.Apis",
+      "flags": 1180033,
+      "extends": 16777229
+    }
+  ]
+}

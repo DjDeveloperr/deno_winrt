@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "test": "deno run -A --unstable ./test/main.ts"
+    "gen": "deno run -A --unstable ./scripts/gen_metadata.ts"
   }
 }

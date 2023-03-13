@@ -1,0 +1,161 @@
+{
+  "version": "Windows.Win32.Interop.dll",
+  "guid": "{B1F1CF6B-C83C-4947-B338-3B51C2F814F1}",
+  "typeDefs": [
+    {
+      "name": "ThisAssembly",
+      "flags": 1048960,
+      "extends": 16777234
+    },
+    {
+      "name": "Windows.Win32.Interop.AgileAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.AlsoUsableForAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.CanReturnErrorsAsSuccessAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.CanReturnMultipleSuccessValuesAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ComOutPtrAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ConstantAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ConstAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.CppAttributeList",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.DoNotReleaseAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.FreeWithAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.GuidAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.InvalidHandleValueAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.MemorySizeAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NativeArrayInfoAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NativeEncodingAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NativeInheritanceAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NativeTypedefAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NativeTypeNameAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NotNullTerminatedAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.NullNullTerminatedAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.RAIIFreeAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ReservedAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ReturnsUnownedHandle",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.RetValAttribute",
+      "flags": 1048833,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.ScopedEnumAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.StaticLibraryAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.StructSizeFieldAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.Architecture",
+      "flags": 257,
+      "extends": 16777242
+    },
+    {
+      "name": "Windows.Win32.Interop.SupportedArchitectureAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    },
+    {
+      "name": "Windows.Win32.Interop.SupportedOSPlatformAttribute",
+      "flags": 1048577,
+      "extends": 16777238
+    }
+  ]
+}
