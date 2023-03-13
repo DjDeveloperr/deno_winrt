@@ -5,7 +5,7 @@ const dispenser = IMetaDataDispenser.create();
 console.log(dispenser);
 
 const scope = dispenser.OpenScope(
-  "H:\\Projects\\deno_win32\\Windows.Win32.winmd",
+  "./metadata/Windows.Win32.winmd",
   0,
   IMetaDataImport2,
 );
